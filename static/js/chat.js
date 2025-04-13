@@ -1,129 +1,151 @@
 /**
  * JavaScript for the chat functionality
  */
+
 document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements - General Chat
+    // DOM Elements
+    const chatMessages = document.getElementById('chat-messages');
     const generalChatForm = document.getElementById('general-chat-form');
-    const generalInput = document.getElementById('general-input');
-    const generalMessages = document.getElementById('general-messages');
-    
-    // DOM Elements - Code Explanation
-    const codeChatForm = document.getElementById('code-chat-form');
-    const codeInput = document.getElementById('code-input');
-    const codeMessages = document.getElementById('code-messages');
-    
-    // DOM Elements - Compare Libraries
-    const compareChatForm = document.getElementById('compare-chat-form');
-    const compareCodeInput = document.getElementById('compare-code-input');
+    const codeExplanationForm = document.getElementById('code-explanation-form');
+    const compareLibrariesForm = document.getElementById('compare-libraries-form');
+    const chatInput = document.getElementById('chat-input');
+    const codeTextarea = document.getElementById('code-textarea');
+    const compareTextarea = document.getElementById('compare-textarea');
     const sourceLibrary = document.getElementById('source-library');
     const targetLibrary = document.getElementById('target-library');
-    const performanceComparison = document.getElementById('performance-comparison');
-    const compareMessages = document.getElementById('compare-messages');
+    const includePerformance = document.getElementById('include-performance');
+    const codeSampleSelect = document.getElementById('code-sample-select');
+    const exampleButtons = document.querySelectorAll('.example-question-btn');
     
-    // DOM Elements - Suggestion Chips
-    const suggestionChips = document.querySelectorAll('.suggestion-chip');
+    // Tab elements
+    const tabs = document.querySelectorAll('.nav-link[data-bs-toggle="tab"]');
     
-    // DOM Elements - Code Samples
-    const codeSamples = document.querySelectorAll('.code-sample');
-    
-    // Add event listeners
-    if (generalChatForm) {
-        generalChatForm.addEventListener('submit', handleGeneralChat);
+    // Form visibility manager
+    function updateFormVisibility(activeTabId) {
+        generalChatForm.style.display = activeTabId === 'general-tab' ? 'block' : 'none';
+        codeExplanationForm.style.display = activeTabId === 'code-tab' ? 'block' : 'none';
+        compareLibrariesForm.style.display = activeTabId === 'compare-tab' ? 'block' : 'none';
     }
     
-    if (codeChatForm) {
-        codeChatForm.addEventListener('submit', handleCodeExplanation);
-    }
+    // Initialize - Show general chat form by default
+    updateFormVisibility('general-tab');
     
-    if (compareChatForm) {
-        compareChatForm.addEventListener('submit', handleCompareLibraries);
-    }
+    // Event Listeners
     
-    // Handle suggestion chips
-    suggestionChips.forEach(chip => {
-        chip.addEventListener('click', function() {
-            const text = this.getAttribute('data-text');
-            if (text && generalInput) {
-                generalInput.value = text;
-                generalInput.focus();
+    // Tab change listener
+    tabs.forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function(event) {
+            updateFormVisibility(event.target.id);
+        });
+    });
+    
+    // General chat form submission
+    generalChatForm.addEventListener('submit', handleGeneralChat);
+    
+    // Code explanation form submission
+    codeExplanationForm.addEventListener('submit', handleCodeExplanation);
+    
+    // Code comparison form submission
+    compareLibrariesForm.addEventListener('submit', handleCompareLibraries);
+    
+    // Example question buttons
+    exampleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            chatInput.value = this.textContent.trim();
+            
+            // Trigger submit if on general tab
+            if (document.querySelector('#general-tab').classList.contains('active')) {
+                setTimeout(() => generalChatForm.dispatchEvent(new Event('submit')), 100);
             }
         });
     });
     
-    // Handle code samples
-    codeSamples.forEach(sample => {
-        sample.addEventListener('click', function() {
-            const sampleType = this.getAttribute('data-sample');
-            if (sampleType && codeInput) {
-                // Fetch code sample from server
-                fetch(`/api/code-sample?type=${sampleType}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to fetch code sample');
-                        }
-                        return response.json();
-                    })
+    // Textarea auto-resize
+    const autoResizeTextarea = function(element) {
+        if (element) {
+            element.style.height = 'auto';
+            element.style.height = (element.scrollHeight) + 'px';
+        }
+    };
+    
+    if (chatInput) {
+        chatInput.addEventListener('input', function() {
+            autoResizeTextarea(this);
+        });
+    }
+    
+    // Code sample selection
+    if (codeSampleSelect) {
+        codeSampleSelect.addEventListener('change', function() {
+            if (this.value) {
+                fetch(`/api/code-sample?type=${this.value}`)
+                    .then(response => response.json())
                     .then(data => {
-                        if (data.code) {
-                            codeInput.value = data.code;
+                        if (data.success && codeTextarea) {
+                            codeTextarea.value = data.code;
+                            autoResizeTextarea(codeTextarea);
                         }
                     })
                     .catch(error => {
-                        console.error('Error fetching code sample:', error);
-                        alert('Failed to load code sample');
+                        console.error('Error loading code sample:', error);
                     });
             }
         });
-    });
+    }
+    
+    // Handler Functions
     
     // Handle general chat form submission
     function handleGeneralChat(e) {
         e.preventDefault();
         
-        const message = generalInput.value.trim();
+        const message = chatInput.value.trim();
         if (!message) return;
         
         // Add user message to chat
-        addMessage(generalMessages, message, 'user');
+        addMessage(chatMessages, message, 'user');
         
         // Clear input
-        generalInput.value = '';
+        chatInput.value = '';
+        autoResizeTextarea(chatInput);
         
-        // Show thinking message
-        const thinkingId = addThinkingMessage(generalMessages);
+        // Add thinking message
+        const thinkingId = addThinkingMessage(chatMessages);
         
-        // Send message to server
+        // Send to API
         fetch('/api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                message: message,
-                type: 'general'
+                type: 'general',
+                message: message
             })
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => {
-                    throw new Error(err.error || 'An error occurred');
-                });
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             // Remove thinking message
             removeThinkingMessage(thinkingId);
             
-            // Add bot response
-            addMessage(generalMessages, data.response, 'bot');
+            if (data.error) {
+                addErrorMessage(chatMessages, data.error);
+            } else {
+                addMessage(chatMessages, data.response, 'system');
+            }
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         })
         .catch(error => {
             // Remove thinking message
             removeThinkingMessage(thinkingId);
             
-            // Add error message
-            addErrorMessage(generalMessages, error.message || 'An error occurred. Please try again.');
+            addErrorMessage(chatMessages, 'An error occurred while sending your message.');
+            console.error('Error:', error);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         });
     }
     
@@ -131,241 +153,278 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleCodeExplanation(e) {
         e.preventDefault();
         
-        const code = codeInput.value.trim();
+        const code = codeTextarea.value.trim();
         if (!code) {
-            alert('Please enter some code to explain');
+            addErrorMessage(chatMessages, 'Please enter code to explain.');
             return;
         }
         
-        // Add user message to chat
-        addCodeBlockMessage(codeMessages, code, 'user');
+        // Add user code block to chat
+        addCodeBlockMessage(chatMessages, code, 'user');
         
-        // Show thinking message
-        const thinkingId = addThinkingMessage(codeMessages);
+        // Add thinking message
+        const thinkingId = addThinkingMessage(chatMessages);
         
-        // Send code to server
+        // Send to API
         fetch('/api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                message: code,
-                type: 'code'
+                type: 'code_explanation',
+                code: code
             })
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => {
-                    throw new Error(err.error || 'An error occurred');
-                });
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             // Remove thinking message
             removeThinkingMessage(thinkingId);
             
-            // Add bot response
-            addMessage(codeMessages, data.response, 'bot');
+            if (data.error) {
+                addErrorMessage(chatMessages, data.error);
+            } else {
+                addMessage(chatMessages, data.response, 'system');
+            }
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         })
         .catch(error => {
             // Remove thinking message
             removeThinkingMessage(thinkingId);
             
-            // Add error message
-            addErrorMessage(codeMessages, error.message || 'An error occurred. Please try again.');
+            addErrorMessage(chatMessages, 'An error occurred while explaining the code.');
+            console.error('Error:', error);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         });
     }
     
-    // Handle compare libraries form submission
+    // Handle library comparison form submission
     function handleCompareLibraries(e) {
         e.preventDefault();
         
-        const code = compareCodeInput.value.trim();
+        const code = compareTextarea.value.trim();
         const source = sourceLibrary.value;
         const target = targetLibrary.value;
-        const includePerformance = performanceComparison.checked;
+        const includePerf = includePerformance.checked;
         
         if (!code) {
-            alert('Please enter some code to compare');
+            addErrorMessage(chatMessages, 'Please enter code to compare.');
             return;
         }
         
-        // Validate source and target are different
-        if (source === target) {
-            alert('Source and target libraries must be different');
-            return;
-        }
+        // Add user code block to chat with description
+        const userMessage = `Please convert this ${source} code to ${target}:`;
+        addMessage(chatMessages, userMessage, 'user');
+        addCodeBlockMessage(chatMessages, code, 'user');
         
-        // Add user message to chat
-        const userMessage = `Compare ${source} to ${target}:\n\n${code}`;
-        addCodeBlockMessage(compareMessages, userMessage, 'user');
+        // Add thinking message
+        const thinkingId = addThinkingMessage(chatMessages);
         
-        // Show thinking message
-        const thinkingId = addThinkingMessage(compareMessages);
-        
-        // Send comparison request to server
+        // Send to API
         fetch('/api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                type: 'compare',
+                type: 'library_comparison',
                 code: code,
                 source_library: source,
                 target_library: target,
-                include_performance: includePerformance
+                include_performance: includePerf
             })
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => {
-                    throw new Error(err.error || 'An error occurred');
-                });
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             // Remove thinking message
             removeThinkingMessage(thinkingId);
             
-            // Add bot response
-            addMessage(compareMessages, data.response, 'bot');
+            if (data.error) {
+                addErrorMessage(chatMessages, data.error);
+            } else {
+                addMessage(chatMessages, data.response, 'system');
+            }
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         })
         .catch(error => {
             // Remove thinking message
             removeThinkingMessage(thinkingId);
             
-            // Add error message
-            addErrorMessage(compareMessages, error.message || 'An error occurred. Please try again.');
+            addErrorMessage(chatMessages, 'An error occurred while comparing libraries.');
+            console.error('Error:', error);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         });
     }
     
-    // Helper to add a message to the chat
+    // Message Helper Functions
+    
+    // Add regular message to chat
     function addMessage(container, message, sender) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender}-message`;
+        const messageWrapper = document.createElement('div');
+        messageWrapper.className = `message-wrapper ${sender}-message`;
         
-        const avatarDiv = document.createElement('div');
-        avatarDiv.className = 'message-avatar';
-        avatarDiv.innerHTML = sender === 'user' ? '<i class="bi bi-person"></i>' : '<i class="bi bi-robot"></i>';
+        const messageContent = document.createElement('div');
+        messageContent.className = 'message-content';
         
-        const contentDiv = document.createElement('div');
-        contentDiv.className = 'message-content';
+        const messageHeader = document.createElement('div');
+        messageHeader.className = 'message-header d-flex align-items-center';
         
-        // Process markdown in bot messages
-        if (sender === 'bot') {
-            // Simple markdown processing (could use a library like marked.js for better support)
-            let formattedMessage = message
-                // Code blocks (```code```)
-                .replace(/```([\s\S]*?)```/g, '<pre class="code-block">$1</pre>')
-                // Inline code (`code`)
-                .replace(/`([^`]+)`/g, '<code>$1</code>')
-                // Bold (**text**)
-                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-                // Italic (*text*)
-                .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-                // Headers (## Header)
-                .replace(/^## (.*$)/gm, '<h3>$1</h3>')
-                .replace(/^# (.*$)/gm, '<h2>$1</h2>')
-                // Lists
-                .replace(/^\s*\d+\.\s+(.*$)/gm, '<li>$1</li>')
-                .replace(/^\s*\*\s+(.*$)/gm, '<li>$1</li>')
-                // Paragraphs
-                .replace(/\n\n/g, '</p><p>');
-                
-            contentDiv.innerHTML = `<p>${formattedMessage}</p>`;
-            
-            // Convert consecutive list items to proper lists
-            const contentHtml = contentDiv.innerHTML;
-            contentDiv.innerHTML = contentHtml
-                .replace(/<li>.*?<\/li>(\s*<li>.*?<\/li>)+/g, function(match) {
-                    return `<ul>${match}</ul>`;
-                });
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        
+        if (sender === 'user') {
+            avatar.innerHTML = '<i class="bi bi-person"></i>';
         } else {
-            // For user messages, simple text with line breaks
-            contentDiv.textContent = message;
+            avatar.innerHTML = '<i class="bi bi-robot"></i>';
         }
         
-        const timestampDiv = document.createElement('div');
-        timestampDiv.className = 'message-timestamp';
-        timestampDiv.textContent = 'Just now';
+        const senderName = document.createElement('div');
+        senderName.className = 'message-sender';
+        senderName.textContent = sender === 'user' ? 'You' : 'Linguista';
         
-        messageDiv.appendChild(avatarDiv);
-        messageDiv.appendChild(contentDiv);
-        messageDiv.appendChild(timestampDiv);
+        messageHeader.appendChild(avatar);
+        messageHeader.appendChild(senderName);
         
-        container.appendChild(messageDiv);
+        const messageBody = document.createElement('div');
+        messageBody.className = 'message-body';
+        
+        // Process markdown
+        const processedMessage = processMarkdown(message);
+        messageBody.innerHTML = processedMessage;
+        
+        messageContent.appendChild(messageHeader);
+        messageContent.appendChild(messageBody);
+        messageWrapper.appendChild(messageContent);
+        
+        container.appendChild(messageWrapper);
         
         // Scroll to bottom
         container.scrollTop = container.scrollHeight;
     }
     
-    // Helper to add a code block message
+    // Add code block message to chat
     function addCodeBlockMessage(container, code, sender) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender}-message`;
+        const messageWrapper = document.createElement('div');
+        messageWrapper.className = `message-wrapper ${sender}-message`;
         
-        const avatarDiv = document.createElement('div');
-        avatarDiv.className = 'message-avatar';
-        avatarDiv.innerHTML = sender === 'user' ? '<i class="bi bi-person"></i>' : '<i class="bi bi-robot"></i>';
+        const messageContent = document.createElement('div');
+        messageContent.className = 'message-content';
         
-        const contentDiv = document.createElement('div');
-        contentDiv.className = 'message-content';
+        const messageHeader = document.createElement('div');
+        messageHeader.className = 'message-header d-flex align-items-center';
         
-        // Format as code block
-        const codeBlock = document.createElement('pre');
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        
+        if (sender === 'user') {
+            avatar.innerHTML = '<i class="bi bi-person"></i>';
+        } else {
+            avatar.innerHTML = '<i class="bi bi-robot"></i>';
+        }
+        
+        const senderName = document.createElement('div');
+        senderName.className = 'message-sender';
+        senderName.textContent = sender === 'user' ? 'You' : 'Linguista';
+        
+        messageHeader.appendChild(avatar);
+        messageHeader.appendChild(senderName);
+        
+        const messageBody = document.createElement('div');
+        messageBody.className = 'message-body';
+        
+        const codeBlock = document.createElement('div');
         codeBlock.className = 'code-block';
-        codeBlock.textContent = code;
         
-        contentDiv.appendChild(codeBlock);
+        const codeHeader = document.createElement('div');
+        codeHeader.className = 'code-header';
+        codeHeader.innerHTML = '<span class="code-language">Python</span>';
         
-        const timestampDiv = document.createElement('div');
-        timestampDiv.className = 'message-timestamp';
-        timestampDiv.textContent = 'Just now';
+        const codeContent = document.createElement('div');
+        codeContent.className = 'code-content';
         
-        messageDiv.appendChild(avatarDiv);
-        messageDiv.appendChild(contentDiv);
-        messageDiv.appendChild(timestampDiv);
+        const pre = document.createElement('pre');
+        pre.className = 'mb-0';
         
-        container.appendChild(messageDiv);
+        const codeElement = document.createElement('code');
+        codeElement.className = 'language-python';
+        codeElement.textContent = code;
+        
+        pre.appendChild(codeElement);
+        codeContent.appendChild(pre);
+        codeBlock.appendChild(codeHeader);
+        codeBlock.appendChild(codeContent);
+        
+        messageBody.appendChild(codeBlock);
+        messageContent.appendChild(messageHeader);
+        messageContent.appendChild(messageBody);
+        messageWrapper.appendChild(messageContent);
+        
+        container.appendChild(messageWrapper);
         
         // Scroll to bottom
         container.scrollTop = container.scrollHeight;
     }
     
-    // Helper to add a thinking message
+    // Add thinking message (spinner)
     function addThinkingMessage(container) {
         const id = 'thinking-' + Date.now();
         
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message bot-message';
-        messageDiv.id = id;
+        const messageWrapper = document.createElement('div');
+        messageWrapper.className = 'message-wrapper system-message';
+        messageWrapper.id = id;
         
-        const avatarDiv = document.createElement('div');
-        avatarDiv.className = 'message-avatar';
-        avatarDiv.innerHTML = '<i class="bi bi-robot"></i>';
+        const messageContent = document.createElement('div');
+        messageContent.className = 'message-content';
         
-        const contentDiv = document.createElement('div');
-        contentDiv.className = 'message-content';
-        contentDiv.innerHTML = `
-            <div class="d-flex align-items-center">
-                <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
-                <span>Thinking...</span>
-            </div>
-        `;
+        const messageHeader = document.createElement('div');
+        messageHeader.className = 'message-header d-flex align-items-center';
         
-        const timestampDiv = document.createElement('div');
-        timestampDiv.className = 'message-timestamp';
-        timestampDiv.textContent = 'Just now';
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        avatar.innerHTML = '<i class="bi bi-robot"></i>';
         
-        messageDiv.appendChild(avatarDiv);
-        messageDiv.appendChild(contentDiv);
-        messageDiv.appendChild(timestampDiv);
+        const senderName = document.createElement('div');
+        senderName.className = 'message-sender';
+        senderName.textContent = 'Linguista';
         
-        container.appendChild(messageDiv);
+        messageHeader.appendChild(avatar);
+        messageHeader.appendChild(senderName);
+        
+        const messageBody = document.createElement('div');
+        messageBody.className = 'message-body';
+        
+        const thinkingMessage = document.createElement('div');
+        thinkingMessage.className = 'thinking-message';
+        
+        const thinkingText = document.createElement('span');
+        thinkingText.textContent = 'Thinking';
+        
+        const thinkingDots = document.createElement('div');
+        thinkingDots.className = 'thinking-dots';
+        
+        for (let i = 0; i < 3; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'thinking-dot';
+            thinkingDots.appendChild(dot);
+        }
+        
+        thinkingMessage.appendChild(thinkingText);
+        thinkingMessage.appendChild(thinkingDots);
+        
+        messageBody.appendChild(thinkingMessage);
+        messageContent.appendChild(messageHeader);
+        messageContent.appendChild(messageBody);
+        messageWrapper.appendChild(messageContent);
+        
+        container.appendChild(messageWrapper);
         
         // Scroll to bottom
         container.scrollTop = container.scrollHeight;
@@ -373,43 +432,97 @@ document.addEventListener('DOMContentLoaded', function() {
         return id;
     }
     
-    // Helper to remove thinking message
+    // Remove thinking message
     function removeThinkingMessage(id) {
-        const messageDiv = document.getElementById(id);
-        if (messageDiv) {
-            messageDiv.remove();
+        const element = document.getElementById(id);
+        if (element) {
+            element.remove();
         }
     }
     
-    // Helper to add an error message
+    // Add error message
     function addErrorMessage(container, errorText) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message bot-message';
+        const messageWrapper = document.createElement('div');
+        messageWrapper.className = 'message-wrapper system-message';
         
-        const avatarDiv = document.createElement('div');
-        avatarDiv.className = 'message-avatar';
-        avatarDiv.innerHTML = '<i class="bi bi-robot"></i>';
+        const messageContent = document.createElement('div');
+        messageContent.className = 'message-content';
         
-        const contentDiv = document.createElement('div');
-        contentDiv.className = 'message-content';
-        contentDiv.innerHTML = `
-            <div class="alert alert-danger mb-0">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                ${errorText}
-            </div>
-        `;
+        const messageHeader = document.createElement('div');
+        messageHeader.className = 'message-header d-flex align-items-center';
         
-        const timestampDiv = document.createElement('div');
-        timestampDiv.className = 'message-timestamp';
-        timestampDiv.textContent = 'Just now';
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        avatar.innerHTML = '<i class="bi bi-robot"></i>';
         
-        messageDiv.appendChild(avatarDiv);
-        messageDiv.appendChild(contentDiv);
-        messageDiv.appendChild(timestampDiv);
+        const senderName = document.createElement('div');
+        senderName.className = 'message-sender';
+        senderName.textContent = 'Linguista';
         
-        container.appendChild(messageDiv);
+        messageHeader.appendChild(avatar);
+        messageHeader.appendChild(senderName);
+        
+        const messageBody = document.createElement('div');
+        messageBody.className = 'message-body';
+        
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'alert alert-danger mb-0';
+        errorMessage.textContent = errorText;
+        
+        messageBody.appendChild(errorMessage);
+        messageContent.appendChild(messageHeader);
+        messageContent.appendChild(messageBody);
+        messageWrapper.appendChild(messageContent);
+        
+        container.appendChild(messageWrapper);
         
         // Scroll to bottom
         container.scrollTop = container.scrollHeight;
+    }
+    
+    // Process markdown in messages (simple version)
+    function processMarkdown(text) {
+        if (!text) return '';
+        
+        // Handle code blocks
+        text = text.replace(/```(\w*)([\s\S]*?)```/g, function(match, language, code) {
+            const lang = language || 'text';
+            return `<div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">${lang}</span>
+                        </div>
+                        <div class="code-content">
+                            <pre class="mb-0"><code class="language-${lang}">${code.trim()}</code></pre>
+                        </div>
+                    </div>`;
+        });
+        
+        // Handle inline code
+        text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+        
+        // Handle bold
+        text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        
+        // Handle italic
+        text = text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+        
+        // Handle lists
+        text = text.replace(/^\s*-\s+(.+)$/gm, '<li>$1</li>');
+        text = text.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+        
+        // Handle ordered lists
+        text = text.replace(/^\s*\d+\.\s+(.+)$/gm, '<li>$1</li>');
+        text = text.replace(/(<li>.*<\/li>)/s, '<ol>$1</ol>');
+        
+        // Handle headers
+        text = text.replace(/^### (.+)$/gm, '<h5>$1</h5>');
+        text = text.replace(/^## (.+)$/gm, '<h4>$1</h4>');
+        text = text.replace(/^# (.+)$/gm, '<h3>$1</h3>');
+        
+        // Handle paragraphs (replace double line breaks with paragraph tags)
+        text = text.replace(/\n\s*\n/g, '</p><p>');
+        text = '<p>' + text + '</p>';
+        
+        return text;
     }
 });
