@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linguista: Your Ultimate NLP Bot</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Extra CSS block -->
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Modern Sidebar Navigation -->
+    <div class="app-layout">
+        <aside class="app-sidebar">
+            <div class="sidebar-header">
+                <a href="/" class="logo">
+                    <i class="bi bi-chat-square-dots"></i>
+                    <span>Linguista</span>
+                </a>
+                <button id="sidebar-toggle-btn" class="sidebar-toggle d-lg-none">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-content">
+                <nav class="sidebar-nav">
+                    <ul class="nav-list">
+                        <li class="nav-list-item">
+                            <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                                <i class="bi bi-tools"></i>
+                                <span>NLP Tools</span>
+                            </a>
+                        </li>
+                        <li class="nav-list-item">
+                            <a href="/chat" class="nav-link {% if request.path == '/chat' %}active{% endif %}">
+                                <i class="bi bi-chat-square-text"></i>
+                                <span>AI Assistant</span>
+                            </a>
+                        </li>
+                        <li class="nav-section">
+                            <div class="nav-section-header">
+                                <span>Learning Resources</span>
+                            </div>
+                        </li>
+                        <li class="nav-list-item">
+                            <a href="#" class="nav-link" onclick="alert('This feature is coming soon!')">
+                                <i class="bi bi-book"></i>
+                                <span>NLP Basics</span>
+                            </a>
+                        </li>
+                        <li class="nav-list-item">
+                            <a href="#" class="nav-link" onclick="alert('This feature is coming soon!')">
+                                <i class="bi bi-code-square"></i>
+                                <span>Code Examples</span>
+                            </a>
+                        </li>
+                        <li class="nav-list-item">
+                            <a href="#" class="nav-link" onclick="alert('This feature is coming soon!')">
+                                <i class="bi bi-graph-up"></i>
+                                <span>Visualizations</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="theme-switcher">
+                    <button id="theme-toggle" class="theme-toggle-btn">
+                        <i class="bi bi-sun-fill light-icon"></i>
+                        <i class="bi bi-moon-fill dark-icon"></i>
+                        <span class="theme-label">Dark Mode</span>
+                    </button>
+                </div>
+                <div class="sidebar-info">
+                    <small>Powered by Gemini AI</small>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="app-main">
+            <!-- Top Navbar -->
+            <header class="app-header">
+                <div class="mobile-header d-flex d-lg-none">
+                    <button id="sidebar-open-btn" class="sidebar-open">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <div class="mobile-logo">Linguista</div>
+                </div>
+                
+                <div class="header-actions">
+                    {% block header_actions %}{% endblock %}
+                </div>
+            </header>
+            
+            <!-- Main Content Area -->
+            <main class="app-content">
+                {% block content %}{% endblock %}
+            </main>
+            
+            <!-- Footer -->
+            <footer class="app-footer">
+                <div class="container-fluid">
+                    <div class="footer-content">
+                        <span>&copy; 2023 Linguista - Your Ultimate NLP Bot</span>
+                        <span>Built with NLTK, spaCy, and Gemini AI</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Theme Switcher Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeLabel = document.querySelector('.theme-label');
+            const htmlElement = document.documentElement;
+            
+            // Check for saved theme preference or use default (dark)
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            htmlElement.setAttribute('data-bs-theme', savedTheme);
+            updateThemeUI(savedTheme);
+            
+            // Toggle theme on click
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = htmlElement.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                htmlElement.setAttribute('data-bs-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeUI(newTheme);
+            });
+            
+            // Update UI based on current theme
+            function updateThemeUI(theme) {
+                themeLabel.textContent = theme === 'dark' ? 'Dark Mode' : 'Light Mode';
+            }
+            
+            // Mobile sidebar toggle
+            const sidebarOpenBtn = document.getElementById('sidebar-open-btn');
+            const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+            const appSidebar = document.querySelector('.app-sidebar');
+            
+            if (sidebarOpenBtn && sidebarToggleBtn && appSidebar) {
+                sidebarOpenBtn.addEventListener('click', function() {
+                    appSidebar.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                });
+                
+                sidebarToggleBtn.addEventListener('click', function() {
+                    appSidebar.classList.remove('open');
+                    document.body.style.overflow = '';
+                });
+            }
+        });
+    </script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <!-- Extra scripts block -->
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

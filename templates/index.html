@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block header_actions %}
+<div class="d-flex align-items-center gap-2">
+    <a href="/chat" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-chat-square-text me-1"></i> NLP Expert Chat
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="tools-page">
+    <div class="page-header mb-4">
+        <h1 class="page-title">NLP Tools</h1>
+        <p class="text-muted">Experiment with various Natural Language Processing techniques</p>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <!-- Control Panel -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent border-bottom">
+                    <h2 class="fs-5 mb-0"><i class="bi bi-sliders me-2"></i>Configure Task</h2>
+                </div>
+                <div class="card-body">
+                    <div class="task-selector mb-4">
+                        <label for="task-select" class="form-label fw-semibold">Select NLP Task</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-secondary bg-opacity-10 border-0"><i class="bi bi-list-task"></i></span>
+                            <select class="form-select" id="task-select">
+                                <option value="tokenization">Tokenization</option>
+                                <option value="stopword_removal">Stopword Removal</option>
+                                <option value="lemmatization">Lemmatization</option>
+                                <option value="pos_tagging">Part-of-Speech Tagging</option>
+                                <option value="ner">Named Entity Recognition</option>
+                                <option value="sentiment_analysis">Sentiment Analysis</option>
+                                <option value="text_summarization">Text Summarization</option>
+                                <option value="keyword_extraction">Keyword Extraction</option>
+                                <option value="text_similarity">Text Similarity</option>
+                                <option value="language_detection">Language Detection</option>
+                            </select>
+                        </div>
+                        <small class="form-text text-muted mt-2">Choose from various NLP operations</small>
+                    </div>
+                    
+                    <div class="library-selector mb-4">
+                        <label class="form-label fw-semibold">Choose Library</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="library" id="nltk-option" value="nltk" checked>
+                            <label class="btn btn-outline-primary" for="nltk-option">
+                                <i class="bi bi-box me-1"></i> NLTK
+                            </label>
+                            <input type="radio" class="btn-check" name="library" id="spacy-option" value="spacy">
+                            <label class="btn btn-outline-primary" for="spacy-option">
+                                <i class="bi bi-lightning me-1"></i> spaCy
+                            </label>
+                        </div>
+                        <small class="form-text text-muted mt-2">Compare implementations across libraries</small>
+                    </div>
+                    
+                    <div class="text-input mb-4">
+                        <label for="text-input" class="form-label fw-semibold">Text to Analyze</label>
+                        <textarea class="form-control" id="text-input" rows="5" placeholder="Enter text to process..."></textarea>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <small class="text-muted" id="char-counter">0 characters</small>
+                            <button class="btn btn-sm btn-outline-secondary" id="sample-text-btn">
+                                <i class="bi bi-file-text me-1"></i> Sample Text
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-input mb-4" id="comparison-container" style="display: none;">
+                        <label for="comparison-text" class="form-label fw-semibold">Comparison Text</label>
+                        <textarea class="form-control" id="comparison-text" rows="3" placeholder="Enter text to compare with..."></textarea>
+                        <small class="form-text text-muted mt-2">Required for text similarity analysis</small>
+                    </div>
+                    
+                    <div class="actions d-grid gap-2">
+                        <button class="btn btn-primary" id="process-button">
+                            <i class="bi bi-play-fill me-1"></i> Process Text
+                        </button>
+                        <button class="btn btn-outline-secondary" id="show-explanation">
+                            <i class="bi bi-info-circle me-1"></i> <span id="explanation-btn-text">Show Explanation</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <!-- Explanation Container -->
+            <div class="card border-0 shadow-sm mb-4 explanation-container" id="explanation-container">
+                <div class="card-header bg-transparent border-bottom">
+                    <h3 class="fs-5 mb-0"><i class="bi bi-info-circle me-2"></i>Task Explanation</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Explanation content will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Visualization Container -->
+            <div class="card border-0 shadow-sm mb-4 visualization-container" id="visualization-container">
+                <div class="card-header bg-transparent border-bottom">
+                    <h3 class="fs-5 mb-0"><i class="bi bi-graph-up me-2"></i>Visualization</h3>
+                </div>
+                <div class="card-body chart-container">
+                    <canvas id="chart-canvas"></canvas>
+                </div>
+            </div>
+            
+            <!-- Loading Spinner -->
+            <div class="spinner-container text-center p-5" id="loading-spinner">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-3">Processing your request...</p>
+            </div>
+            
+            <!-- Error Container -->
+            <div class="alert alert-danger" id="error-container" style="display: none;"></div>
+            
+            <!-- Result Container -->
+            <div class="card border-0 shadow-sm result-container" id="result-container">
+                <div class="card-header bg-transparent border-bottom">
+                    <h3 class="fs-5 mb-0"><i class="bi bi-clipboard-data me-2"></i>Results</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Results will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include result display partial -->
+{% include 'partials/result_display.html' %}
+
+<!-- Include task explanation partial -->
+{% include 'partials/task_explanation.html' %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Update character counter for text input
+    document.getElementById('text-input').addEventListener('input', function() {
+        const charCount = this.value.length;
+        document.getElementById('char-counter').textContent = charCount + ' characters';
+    });
+    
+    // Handle radio button library selection
+    document.querySelectorAll('input[name="library"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (document.getElementById('library-select')) {
+                document.getElementById('library-select').value = this.value;
+            }
+        });
+    });
+</script>
+{% endblock %}
