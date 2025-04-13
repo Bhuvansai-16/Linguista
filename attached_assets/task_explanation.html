@@ -1,0 +1,99 @@
+<!-- This file will be included in the main templates to handle task explanations -->
+<script>
+    // Function to fetch explanation from the server
+    function fetchExplanation(task) {
+        fetch(`/explanation/${task}`)
+            .then(response => response.json())
+            .then(explanation => {
+                displayExplanation(explanation);
+            })
+            .catch(error => {
+                console.error('Error fetching explanation:', error);
+                document.getElementById('explanation-container').innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Error loading explanation for ${task}
+                    </div>
+                `;
+            });
+    }
+    
+    // Function to display explanation
+    function displayExplanation(explanation) {
+        const container = document.getElementById('explanation-container');
+        
+        if (!explanation || !explanation.title) {
+            container.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    No explanation available for this task.
+                </div>
+            `;
+            return;
+        }
+        
+        // Create HTML for explanation
+        let html = `
+            <div class="card-header bg-transparent border-bottom">
+                <h3 class="fs-5 mb-0"><i class="bi bi-info-circle me-2"></i>${explanation.title} Explanation</h3>
+            </div>
+            <div class="card-body">
+                <div class="explanation-section">
+                    <div class="explanation-title">What is ${explanation.title}?</div>
+                    <div class="explanation-content">${explanation.what}</div>
+                </div>
+                
+                <div class="explanation-section">
+                    <div class="explanation-title">Why is it Important?</div>
+                    <div class="explanation-content">${explanation.why}</div>
+                </div>
+                
+                <div class="explanation-section">
+                    <div class="explanation-title">How it Works</div>
+                    <div class="library-comparison">
+        `;
+        
+        // Add explanations for each library
+        if (explanation.how && explanation.how.nltk) {
+            html += `
+                <div class="library-card">
+                    <div class="library-name">
+                        <i class="bi bi-box"></i> NLTK
+                    </div>
+                    <div class="library-explanation">
+                        ${explanation.how.nltk}
+                    </div>
+                </div>
+            `;
+        }
+        
+        if (explanation.how && explanation.how.spacy) {
+            html += `
+                <div class="library-card">
+                    <div class="library-name">
+                        <i class="bi bi-lightning"></i> spaCy
+                    </div>
+                    <div class="library-explanation">
+                        ${explanation.how.spacy}
+                    </div>
+                </div>
+            `;
+        }
+        
+        html += `
+                    </div>
+                </div>
+                
+                <div class="mt-4 pt-3 border-top">
+                    <small class="text-muted">
+                        <i class="bi bi-lightbulb"></i>
+                        Tip: Try switching between NLTK and spaCy to compare the different implementations.
+                    </small>
+                </div>
+            </div>
+        `;
+        
+        container.innerHTML = html;
+        container.style.display = 'block';
+    }
+</script>
