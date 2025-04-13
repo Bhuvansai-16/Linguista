@@ -21,17 +21,21 @@ logger = logging.getLogger(__name__)
 DetectorFactory.seed = 0
 
 # Download necessary NLTK resources
-try:
-    nltk.download('punkt', quiet=True)
-    nltk.download('stopwords', quiet=True)
-    nltk.download('wordnet', quiet=True)
-    nltk.download('averaged_perceptron_tagger', quiet=True)
-    nltk.download('maxent_ne_chunker', quiet=True)
-    nltk.download('words', quiet=True)
-    nltk.download('vader_lexicon', quiet=True)
-    nltk.download('omw-1.4', quiet=True)
-except Exception as e:
-    logger.warning(f"Error downloading NLTK resources: {str(e)}")
+required_resources = [
+    'punkt', 'stopwords', 'wordnet', 'averaged_perceptron_tagger',
+    'maxent_ne_chunker', 'words', 'vader_lexicon', 'omw-1.4'
+]
+
+for resource in required_resources:
+    try:
+        nltk.download(resource, quiet=True)
+    except Exception as e:
+        logger.error(f"Error downloading NLTK resource '{resource}': {str(e)}")
+        logger.info(f"Attempting to download '{resource}' with verbose output...")
+        try:
+            nltk.download(resource, quiet=False)
+        except Exception as e:
+            logger.error(f"Failed to download '{resource}' after retry: {str(e)}")
 
 # Load spaCy models
 try:
