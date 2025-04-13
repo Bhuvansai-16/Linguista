@@ -1,102 +1,44 @@
-<!-- This file will be included in the main templates to handle task explanations -->
-<script>
-    // Function to fetch explanation from the server
-    function fetchExplanation(task) {
-        fetch(`/explanation/${task}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch explanation: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(explanation => {
-                displayExplanation(explanation);
-            })
-            .catch(error => {
-                console.error('Error fetching explanation:', error);
-                document.querySelector('#explanation-container .card-body').innerHTML = `
-                    <div class="alert alert-warning">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        Error loading explanation: ${error.message}
-                    </div>
-                `;
-                document.getElementById('explanation-container').style.display = 'block';
-            });
-    }
-    
-    // Function to display explanation
-    function displayExplanation(explanation) {
-        const container = document.getElementById('explanation-container');
-        const cardBody = container.querySelector('.card-body');
+<!-- NLP Task Explanation Templates -->
+
+<!-- Task Explanation Template -->
+<template id="task-explanation-template">
+    <div class="explanation">
+        <div class="explanation-section mb-4">
+            <h4 class="explanation-title">What is <span data-explanation="title"></span>?</h4>
+            <div class="explanation-content" data-explanation="what"></div>
+        </div>
         
-        if (!explanation || !explanation.title) {
-            cardBody.innerHTML = `
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle-fill me-2"></i>
-                    No explanation available for this task.
-                </div>
-            `;
-            container.style.display = 'block';
-            return;
-        }
+        <div class="explanation-section mb-4">
+            <h4 class="explanation-title">Why is it Useful?</h4>
+            <div class="explanation-content" data-explanation="why"></div>
+        </div>
         
-        // Create HTML for explanation
-        let html = `
-            <div class="explanation-section">
-                <div class="explanation-title">What is ${explanation.title}?</div>
-                <div class="explanation-content">${explanation.what}</div>
-            </div>
+        <div class="explanation-section">
+            <h4 class="explanation-title">How it Works</h4>
             
-            <div class="explanation-section">
-                <div class="explanation-title">Why is it Important?</div>
-                <div class="explanation-content">${explanation.why}</div>
-            </div>
+            <ul class="nav nav-tabs mb-3" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="nltk-tab" data-bs-toggle="tab" data-bs-target="#nltk-panel" 
+                            type="button" role="tab" aria-controls="nltk-panel" aria-selected="true">
+                        NLTK
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="spacy-tab" data-bs-toggle="tab" data-bs-target="#spacy-panel" 
+                            type="button" role="tab" aria-controls="spacy-panel" aria-selected="false">
+                        spaCy
+                    </button>
+                </li>
+            </ul>
             
-            <div class="explanation-section">
-                <div class="explanation-title">How it Works</div>
-                <div class="library-comparison">
-        `;
-        
-        // Add explanations for each library
-        if (explanation.how && explanation.how.nltk) {
-            html += `
-                <div class="library-card">
-                    <div class="library-name">
-                        <i class="bi bi-box"></i> NLTK
-                    </div>
-                    <div class="library-explanation">
-                        ${explanation.how.nltk}
-                    </div>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="nltk-panel" role="tabpanel" aria-labelledby="nltk-tab">
+                    <div class="explanation-content" data-explanation="how.nltk"></div>
                 </div>
-            `;
-        }
-        
-        if (explanation.how && explanation.how.spacy) {
-            html += `
-                <div class="library-card">
-                    <div class="library-name">
-                        <i class="bi bi-lightning"></i> spaCy
-                    </div>
-                    <div class="library-explanation">
-                        ${explanation.how.spacy}
-                    </div>
-                </div>
-            `;
-        }
-        
-        html += `
+                <div class="tab-pane fade" id="spacy-panel" role="tabpanel" aria-labelledby="spacy-tab">
+                    <div class="explanation-content" data-explanation="how.spacy"></div>
                 </div>
             </div>
-            
-            <div class="mt-4 pt-3 border-top">
-                <small class="text-muted">
-                    <i class="bi bi-lightbulb"></i>
-                    Tip: Try switching between NLTK and spaCy to compare the different implementations.
-                </small>
-            </div>
-        `;
-        
-        cardBody.innerHTML = html;
-        container.style.display = 'block';
-    }
-</script>
+        </div>
+    </div>
+</template>

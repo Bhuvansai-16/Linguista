@@ -1,206 +1,265 @@
-<!-- This file will be included in the main templates to handle displaying results -->
-<script>
-    // Function to get color for entity types
-    function getEntityColor(entityType) {
-        const colors = {
-            'PERSON': '#ff6b6b',          // Red
-            'ORGANIZATION': '#4dabf7',    // Blue
-            'LOCATION': '#51cf66',        // Green
-            'DATE': '#ffd43b',            // Yellow
-            'TIME': '#e599f7',            // Purple
-            'MONEY': '#82c91e',           // Lime
-            'PERCENT': '#fd7e14',         // Orange
-            'FACILITY': '#38d9a9',        // Teal
-            'PRODUCT': '#66d9e8',         // Cyan
-            'EVENT': '#da77f2',           // Grape
-            'WORK_OF_ART': '#ffe066',     // Yellow
-            'LAW': '#a5d8ff',             // Light Blue
-            'LANGUAGE': '#ced4da',        // Gray
-            'GPE': '#20c997',             // Teal (Geo-Political Entity)
-            'NORP': '#ff922b',            // Orange (Nationality or Religious/Political Group)
-            'CARDINAL': '#adb5bd',        // Gray
-            'ORDINAL': '#868e96',         // Dark Gray
-            'QUANTITY': '#74c0fc',        // Sky Blue
-        };
-        
-        return colors[entityType] || '#9775fa';  // Default violet
-    }
-    
-    // Function to get class for sentiment
-    function getSentimentClass(sentiment) {
-        if (sentiment === 'Positive') {
-            return 'text-success';
-        } else if (sentiment === 'Negative') {
-            return 'text-danger';
-        } else {
-            return 'text-secondary';
-        }
-    }
-    
-    // Function to show error messages
-    function showError(message) {
-        const errorContainer = document.getElementById('error-container');
-        errorContainer.textContent = message;
-        errorContainer.style.display = 'block';
-    }
-    
-    // Function to display visualization based on task and data
-    function displayVisualization(visualData, task) {
-        const visualizationContainer = document.getElementById('visualization-container');
-        const chartCanvas = document.getElementById('chart-canvas');
-        
-        // Clear previous chart if it exists
-        if (window.resultChart) {
-            window.resultChart.destroy();
-        }
-        
-        // Show the visualization container
-        visualizationContainer.style.display = 'block';
-        
-        // Create visualization based on task
-        switch (task) {
-            case 'sentiment_analysis':
-                // Sentiment pie chart
-                window.resultChart = new Chart(chartCanvas, {
-                    type: 'pie',
-                    data: {
-                        labels: visualData.map(d => d.name),
-                        datasets: [{
-                            data: visualData.map(d => d.value),
-                            backgroundColor: [
-                                'rgba(82, 207, 91, 0.7)',  // Positive - Green
-                                'rgba(173, 181, 189, 0.7)', // Neutral - Gray
-                                'rgba(239, 68, 68, 0.7)'    // Negative - Red
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'right',
-                                labels: {
-                                    color: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#f3f4f6' : '#333'
-                                }
-                            },
-                            title: {
-                                display: true,
-                                text: 'Sentiment Distribution',
-                                color: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#f3f4f6' : '#333'
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const value = context.parsed;
-                                        return `${context.label}: ${(value * 100).toFixed(1)}%`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-                break;
-                
-            case 'keyword_extraction':
-                // Keyword bar chart
-                const sortedData = [...visualData].sort((a, b) => b.value - a.value);
-                window.resultChart = new Chart(chartCanvas, {
-                    type: 'bar',
-                    data: {
-                        labels: sortedData.map(d => d.name),
-                        datasets: [{
-                            label: 'Relevance Score',
-                            data: sortedData.map(d => d.value),
-                            backgroundColor: 'rgba(98, 69, 255, 0.7)',
-                            borderColor: 'rgba(98, 69, 255, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        indexAxis: 'y',
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            title: {
-                                display: true,
-                                text: 'Top Keywords',
-                                color: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#f3f4f6' : '#333'
-                            }
-                        },
-                        scales: {
-                            x: {
-                                beginAtZero: true,
-                                ticks: {
-                                    color: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#f3f4f6' : '#333'
-                                },
-                                grid: {
-                                    color: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-                                }
-                            },
-                            y: {
-                                ticks: {
-                                    color: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#f3f4f6' : '#333'
-                                },
-                                grid: {
-                                    color: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-                                }
-                            }
-                        }
-                    }
-                });
-                break;
-                
-            case 'text_similarity':
-                // Text similarity visualization
-                const data = [
-                    visualData.text1_unique_count,
-                    visualData.common_terms_count,
-                    visualData.text2_unique_count
-                ];
-                
-                window.resultChart = new Chart(chartCanvas, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Unique to Text 1', 'Common Terms', 'Unique to Text 2'],
-                        datasets: [{
-                            data: data,
-                            backgroundColor: [
-                                'rgba(59, 130, 246, 0.7)',  // Blue
-                                'rgba(16, 185, 129, 0.7)',  // Green
-                                'rgba(245, 158, 11, 0.7)'   // Orange
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'right',
-                                labels: {
-                                    color: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#f3f4f6' : '#333'
-                                }
-                            },
-                            title: {
-                                display: true,
-                                text: `Similarity Score: ${(visualData.similarity_score * 100).toFixed(1)}%`,
-                                color: document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#f3f4f6' : '#333'
-                            }
-                        }
-                    }
-                });
-                break;
-                
-            default:
-                // No visualization for this task
-                visualizationContainer.style.display = 'none';
-                break;
-        }
-    }
-</script>
+<!-- NLP Task Result Display Templates -->
+
+<!-- Tokenization Template -->
+<template id="tokenization-template">
+    <div class="task-result">
+        <div class="result-info mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="stat-card mb-3">
+                        <div class="stat-label">Word Count</div>
+                        <div class="stat-value" data-result="word_count"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="stat-card mb-3">
+                        <div class="stat-label">Sentence Count</div>
+                        <div class="stat-value" data-result="sentence_count"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-sections">
+            <div class="result-section mb-4">
+                <h4 class="result-section-title">Words</h4>
+                <div class="token-display" data-result="words" data-type="array"></div>
+            </div>
+
+            <div class="result-section">
+                <h4 class="result-section-title">Sentences</h4>
+                <div class="sentence-display" data-result="sentences" data-type="array"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Stopword Removal Template -->
+<template id="stopword_removal-template">
+    <div class="task-result">
+        <div class="result-info mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="stat-card mb-3">
+                        <div class="stat-label">Original Word Count</div>
+                        <div class="stat-value" data-result="original_count"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="stat-card mb-3">
+                        <div class="stat-label">After Removal</div>
+                        <div class="stat-value" data-result="filtered_count"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-sections">
+            <div class="result-section mb-4">
+                <h4 class="result-section-title">Filtered Words</h4>
+                <div class="token-display" data-result="filtered_words" data-type="array"></div>
+            </div>
+
+            <div class="result-section">
+                <h4 class="result-section-title">Removed Words</h4>
+                <div class="token-display removed-tokens" data-result="removed_words" data-type="array"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Lemmatization Template -->
+<template id="lemmatization-template">
+    <div class="task-result">
+        <div class="result-sections">
+            <div class="result-section mb-4">
+                <h4 class="result-section-title">Lemmatized Words</h4>
+                <div class="token-display" data-result="lemmatized_words" data-type="array"></div>
+            </div>
+
+            <div class="result-section">
+                <h4 class="result-section-title">Changes</h4>
+                <div class="lemma-display" data-result="lemma_dict" data-type="dict"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- POS Tagging Template -->
+<template id="pos_tagging-template">
+    <div class="task-result">
+        <div class="result-sections">
+            <div class="result-section mb-4">
+                <h4 class="result-section-title">Tagged Words</h4>
+                <div class="pos-display" data-result="pos_tags" data-type="array"></div>
+            </div>
+
+            <div class="result-section">
+                <h4 class="result-section-title">Words by Category</h4>
+                <div class="pos-groups-display" data-result="pos_groups" data-type="dict"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Named Entity Recognition Template -->
+<template id="ner-template">
+    <div class="task-result">
+        <div class="result-sections">
+            <div class="result-section mb-4">
+                <h4 class="result-section-title">Recognized Entities</h4>
+                <div class="entity-display" data-result="entities" data-type="array"></div>
+            </div>
+
+            <div class="result-section">
+                <h4 class="result-section-title">Entities by Type</h4>
+                <div class="entity-groups-display" data-result="entity_groups" data-type="dict"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Sentiment Analysis Template -->
+<template id="sentiment_analysis-template">
+    <div class="task-result">
+        <div class="result-info mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="stat-card mb-3">
+                        <div class="stat-label">Overall Sentiment</div>
+                        <div class="stat-value sentiment-value" data-result="sentiment"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="stat-card mb-3">
+                        <div class="stat-label">Compound Score</div>
+                        <div class="stat-value" data-result="scores.compound"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-sections">
+            <div class="result-section">
+                <h4 class="result-section-title">Detailed Scores</h4>
+                <div class="score-display" data-result="scores" data-exclude="compound" data-type="dict"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Text Summarization Template -->
+<template id="text_summarization-template">
+    <div class="task-result">
+        <div class="result-info mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="stat-card mb-3">
+                        <div class="stat-label">Original Length</div>
+                        <div class="stat-value" data-result="original_length"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="stat-card mb-3">
+                        <div class="stat-label">Summary Length</div>
+                        <div class="stat-value" data-result="summary_length"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="stat-card mb-3">
+                        <div class="stat-label">Compression Ratio</div>
+                        <div class="stat-value" data-result="compression_ratio" data-format="percent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-sections">
+            <div class="result-section">
+                <h4 class="result-section-title">Summary</h4>
+                <div class="summary-display" data-result="summary"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Keyword Extraction Template -->
+<template id="keyword_extraction-template">
+    <div class="task-result">
+        <div class="result-sections">
+            <div class="result-section">
+                <h4 class="result-section-title">Top Keywords</h4>
+                <div class="keyword-display" data-result="keyword_list" data-type="array"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Text Similarity Template -->
+<template id="text_similarity-template">
+    <div class="task-result">
+        <div class="result-info mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="stat-card mb-3">
+                        <div class="stat-label">Similarity Score</div>
+                        <div class="stat-value" data-result="similarity_score" data-format="percent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-sections">
+            <div class="result-section mb-4">
+                <h4 class="result-section-title">Common Terms</h4>
+                <div class="token-display" data-result="common_terms" data-type="array"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="result-section">
+                        <h4 class="result-section-title">Unique to Text 1</h4>
+                        <div class="token-display" data-result="text1_unique" data-type="array"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="result-section">
+                        <h4 class="result-section-title">Unique to Text 2</h4>
+                        <div class="token-display" data-result="text2_unique" data-type="array"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Language Detection Template -->
+<template id="language_detection-template">
+    <div class="task-result">
+        <div class="result-info mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="stat-card mb-3">
+                        <div class="stat-label">Detected Language</div>
+                        <div class="stat-value" data-result="language_name"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="stat-card mb-3">
+                        <div class="stat-label">Language Code</div>
+                        <div class="stat-value" data-result="language_code"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-sections">
+            <div class="result-section">
+                <h4 class="result-section-title">Confidence Scores</h4>
+                <div class="probability-display" data-result="probabilities" data-type="array"></div>
+            </div>
+        </div>
+    </div>
+</template>

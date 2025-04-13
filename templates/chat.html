@@ -2,191 +2,185 @@
 
 {% block header_actions %}
 <div class="d-flex align-items-center gap-2">
-    <span class="badge rounded-pill bg-primary-subtle text-primary px-3 py-2">
-        <i class="bi bi-lightning-fill me-1"></i> Powered by Gemini
-    </span>
+    <a href="/" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-tools me-1"></i> NLP Tools
+    </a>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="chat-page">
-    <h1 class="page-title mb-4">NLP Expert Assistant</h1>
+    <div class="page-header mb-4">
+        <h1 class="page-title">AI Assistant</h1>
+        <p class="text-muted">Ask questions about NLP concepts, get code explanations, or compare libraries</p>
+    </div>
     
-    <!-- Chat Interface -->
-    <div class="chat-container">
-        <!-- Chat Tabs -->
-        <div class="chat-tabs-container">
-            <div class="chat-tab active" data-bs-target="general-chat">
-                <i class="bi bi-chat-square-text"></i>
-                <span>Ask Questions</span>
-            </div>
-            <div class="chat-tab" data-bs-target="code-explanation">
-                <i class="bi bi-braces"></i>
-                <span>Code Explanation</span>
-            </div>
-            <div class="chat-tab" data-bs-target="compare-libraries">
-                <i class="bi bi-code-slash"></i>
-                <span>Compare Libraries</span>
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <!-- Chat Options Panel -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom">
+                    <h2 class="fs-5 mb-0"><i class="bi bi-chat-square-dots me-2"></i>Chat Options</h2>
+                </div>
+                <div class="card-body">
+                    <div class="chat-mode-tabs mb-4">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general-panel" 
+                                        type="button" role="tab" aria-controls="general-panel" aria-selected="true">
+                                    <i class="bi bi-chat-dots me-1"></i> General
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code-panel" 
+                                        type="button" role="tab" aria-controls="code-panel" aria-selected="false">
+                                    <i class="bi bi-code-square me-1"></i> Code
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="compare-tab" data-bs-toggle="tab" data-bs-target="#compare-panel" 
+                                        type="button" role="tab" aria-controls="compare-panel" aria-selected="false">
+                                    <i class="bi bi-arrow-left-right me-1"></i> Compare
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content pt-3">
+                            <!-- General Chat Options -->
+                            <div class="tab-pane fade show active" id="general-panel" role="tabpanel" aria-labelledby="general-tab">
+                                <p class="text-muted mb-3">Ask questions about NLP concepts, techniques, or applications.</p>
+                                
+                                <div class="example-questions">
+                                    <p class="mb-2 fw-semibold">Example questions:</p>
+                                    <div class="example-chips d-flex flex-wrap gap-2 mb-3">
+                                        <button class="btn btn-sm btn-outline-secondary example-question-btn">
+                                            What is tokenization?
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary example-question-btn">
+                                            Explain word embeddings
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary example-question-btn">
+                                            When should I use BERT?
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Code Explanation Options -->
+                            <div class="tab-pane fade" id="code-panel" role="tabpanel" aria-labelledby="code-tab">
+                                <p class="text-muted mb-3">Get explanations of NLP code snippets.</p>
+                                
+                                <div class="code-sample-selector mb-3">
+                                    <label for="code-sample-select" class="form-label fw-semibold">Code Sample</label>
+                                    <select class="form-select mb-2" id="code-sample-select">
+                                        <option value="">-- Select a sample or enter your own --</option>
+                                        <option value="nltk-tokenize">NLTK Tokenization</option>
+                                        <option value="spacy-ner">spaCy Named Entity Recognition</option>
+                                        <option value="sklearn-vectorizer">scikit-learn Vectorization</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="code-input mb-3">
+                                    <label for="code-textarea" class="form-label fw-semibold">Code to Explain</label>
+                                    <textarea class="form-control code-textarea" id="code-textarea" rows="8" 
+                                              placeholder="Paste NLP code here for explanation..."></textarea>
+                                </div>
+                            </div>
+                            
+                            <!-- Library Comparison Options -->
+                            <div class="tab-pane fade" id="compare-panel" role="tabpanel" aria-labelledby="compare-tab">
+                                <p class="text-muted mb-3">Compare implementations across different NLP libraries.</p>
+                                
+                                <div class="library-comparison-form">
+                                    <div class="form-group mb-3">
+                                        <label for="source-library" class="form-label fw-semibold">Source Library</label>
+                                        <select class="form-select" id="source-library">
+                                            <option value="nltk">NLTK</option>
+                                            <option value="spacy">spaCy</option>
+                                            <option value="sklearn">scikit-learn</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group mb-3">
+                                        <label for="target-library" class="form-label fw-semibold">Target Library</label>
+                                        <select class="form-select" id="target-library">
+                                            <option value="spacy">spaCy</option>
+                                            <option value="nltk">NLTK</option>
+                                            <option value="sklearn">scikit-learn</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" value="" id="include-performance" checked>
+                                        <label class="form-check-label" for="include-performance">
+                                            Include performance comparison
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="code-input mb-3">
+                                        <label for="compare-textarea" class="form-label fw-semibold">Code to Convert</label>
+                                        <textarea class="form-control code-textarea" id="compare-textarea" rows="8" 
+                                                  placeholder="Paste code from source library here..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
-        <!-- Chat Content -->
-        <div class="chat-content">
-            <!-- General NLP Questions -->
-            <div class="chat-panel active" id="general-chat">
-                <div class="chat-messages" id="general-messages">
-                    <div class="message bot-message">
-                        <div class="message-avatar">
-                            <i class="bi bi-robot"></i>
-                        </div>
-                        <div class="message-content">
-                            <p>Hello! I'm your NLP Expert assistant. I can help with:</p>
-                            <ul>
-                                <li>Explanations of NLP concepts and techniques</li>
-                                <li>Differences between libraries like NLTK and spaCy</li>
-                                <li>Best practices for implementing NLP tasks</li>
-                                <li>Understanding how NLP algorithms work</li>
-                            </ul>
-                            <p>What would you like to know about NLP today?</p>
-                        </div>
-                        <div class="message-timestamp">Just now</div>
-                    </div>
-                </div>
-                
-                <div class="chat-input-container">
-                    <form id="general-chat-form" class="chat-form">
-                        <div class="input-group">
-                            <input type="text" id="general-input" class="form-control" placeholder="Ask about any NLP concept...">
-                            <button class="btn btn-primary" type="submit">
-                                <i class="bi bi-send"></i>
-                            </button>
-                        </div>
-                        <div class="suggestion-chips mt-2">
-                            <div class="d-flex flex-wrap gap-2">
-                                <span class="badge bg-secondary bg-opacity-10 text-secondary suggestion-chip" data-text="What's the difference between NLTK and spaCy?">NLTK vs spaCy</span>
-                                <span class="badge bg-secondary bg-opacity-10 text-secondary suggestion-chip" data-text="Explain word embeddings">Word embeddings</span>
-                                <span class="badge bg-secondary bg-opacity-10 text-secondary suggestion-chip" data-text="How does sentiment analysis work?">Sentiment analysis</span>
-                                <span class="badge bg-secondary bg-opacity-10 text-secondary suggestion-chip" data-text="What is the transformer architecture?">Transformers</span>
-                                <span class="badge bg-secondary bg-opacity-10 text-secondary suggestion-chip" data-text="Explain Named Entity Recognition (NER)">Named Entity Recognition</span>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- Code Explanation Panel -->
-            <div class="chat-panel" id="code-explanation">
-                <div class="chat-messages" id="code-messages">
-                    <div class="message bot-message">
-                        <div class="message-avatar">
-                            <i class="bi bi-robot"></i>
-                        </div>
-                        <div class="message-content">
-                            <p>Paste your NLP code below and I'll provide:</p>
-                            <ul>
-                                <li>A detailed explanation of how the code works</li>
-                                <li>The NLP concepts and techniques being used</li>
-                                <li>Suggestions for improvements or optimizations</li>
-                                <li>Potential issues to be aware of</li>
-                            </ul>
-                            <p>You can also try one of the sample code snippets below.</p>
-                        </div>
-                        <div class="message-timestamp">Just now</div>
-                    </div>
-                </div>
-                
-                <div class="chat-input-container">
-                    <form id="code-chat-form" class="chat-form">
-                        <div class="form-group mb-3">
-                            <textarea id="code-input" class="form-control code-textarea" rows="6" placeholder="# Paste your Python code here (NLTK, spaCy, etc.)"></textarea>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="code-samples">
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                        <i class="bi bi-code-square me-1"></i> Sample Code
-                                    </button>
-                                    <ul class="dropdown-menu code-sample-menu">
-                                        <li><h6 class="dropdown-header">Basic Examples</h6></li>
-                                        <li><a class="dropdown-item code-sample" data-sample="nltk-tokenize" href="javascript:void(0)">NLTK Tokenization</a></li>
-                                        <li><a class="dropdown-item code-sample" data-sample="spacy-ner" href="javascript:void(0)">spaCy NER</a></li>
-                                        <li><a class="dropdown-item code-sample" data-sample="sklearn-vectorizer" href="javascript:void(0)">Text Vectorization</a></li>
+        <div class="col-lg-8">
+            <!-- Chat Container -->
+            <div class="card border-0 shadow-sm chat-container">
+                <div class="card-body p-0">
+                    <!-- Chat Messages -->
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message-wrapper system-message">
+                            <div class="message-content">
+                                <div class="message-header d-flex align-items-center">
+                                    <div class="message-avatar">
+                                        <i class="bi bi-robot"></i>
+                                    </div>
+                                    <div class="message-sender">Linguista</div>
+                                </div>
+                                <div class="message-body">
+                                    <p>👋 Hi there! I'm your NLP expert assistant. I can help you with:</p>
+                                    <ul>
+                                        <li>Answering questions about NLP concepts and techniques</li>
+                                        <li>Explaining NLP-related code</li>
+                                        <li>Comparing implementations across different libraries</li>
                                     </ul>
+                                    <p>Choose a chat mode from the options panel and let's get started!</p>
                                 </div>
                             </div>
-                            <button class="btn btn-primary" type="submit">
-                                <i class="bi bi-send me-1"></i> Explain Code
-                            </button>
                         </div>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- Compare Libraries Panel -->
-            <div class="chat-panel" id="compare-libraries">
-                <div class="chat-messages" id="compare-messages">
-                    <div class="message bot-message">
-                        <div class="message-avatar">
-                            <i class="bi bi-robot"></i>
-                        </div>
-                        <div class="message-content">
-                            <p>I can help you translate code between different NLP libraries. Enter your code and select the source and target libraries to get:</p>
-                            <ul>
-                                <li>An equivalent implementation in the target library</li>
-                                <li>Side-by-side comparison of both approaches</li>
-                                <li>Explanation of key differences in API design and performance</li>
-                                <li>Tips on which library might be better for specific use cases</li>
-                            </ul>
-                        </div>
-                        <div class="message-timestamp">Just now</div>
                     </div>
-                </div>
-                
-                <div class="chat-input-container">
-                    <form id="compare-chat-form" class="chat-form">
-                        <div class="form-group mb-3">
-                            <textarea id="compare-code-input" class="form-control code-textarea" rows="6" placeholder="# Paste your Python code here"></textarea>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <span class="input-group-text bg-secondary bg-opacity-10 text-secondary border-0">
-                                        <i class="bi bi-box-arrow-in-up-left"></i>
-                                    </span>
-                                    <select id="source-library" class="form-select">
-                                        <option value="nltk">NLTK</option>
-                                        <option value="spacy">spaCy</option>
-                                        <option value="gensim">Gensim</option>
-                                        <option value="scikit-learn">Scikit-learn</option>
-                                    </select>
-                                </div>
-                                <small class="form-text text-muted">Source library</small>
+                    
+                    <!-- Chat Input -->
+                    <div class="chat-input-container">
+                        <form id="general-chat-form" class="chat-form">
+                            <div class="input-group">
+                                <textarea class="form-control chat-input" id="chat-input" 
+                                          placeholder="Ask a question about NLP..." rows="1"></textarea>
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-send"></i>
+                                </button>
                             </div>
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <span class="input-group-text bg-secondary bg-opacity-10 text-secondary border-0">
-                                        <i class="bi bi-box-arrow-in-down-right"></i>
-                                    </span>
-                                    <select id="target-library" class="form-select">
-                                        <option value="spacy">spaCy</option>
-                                        <option value="nltk">NLTK</option>
-                                        <option value="gensim">Gensim</option>
-                                        <option value="scikit-learn">Scikit-learn</option>
-                                    </select>
-                                </div>
-                                <small class="form-text text-muted">Target library</small>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="performance-comparison" checked>
-                                <label class="form-check-label" for="performance-comparison">Include performance comparison</label>
-                            </div>
-                            <button class="btn btn-primary" type="submit">
-                                <i class="bi bi-send me-1"></i> Compare Libraries
+                        </form>
+                        
+                        <form id="code-explanation-form" class="chat-form" style="display: none;">
+                            <button class="btn btn-primary w-100" type="submit">
+                                <i class="bi bi-code-square me-1"></i> Explain Code
                             </button>
-                        </div>
-                    </form>
+                        </form>
+                        
+                        <form id="compare-libraries-form" class="chat-form" style="display: none;">
+                            <button class="btn btn-primary w-100" type="submit">
+                                <i class="bi bi-arrow-left-right me-1"></i> Compare Libraries
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -195,30 +189,5 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Tab functionality
-        const tabs = document.querySelectorAll('.chat-tab');
-        const panels = document.querySelectorAll('.chat-panel');
-        
-        tabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                const target = this.getAttribute('data-bs-target');
-                
-                // Update active tab
-                tabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Show target panel
-                panels.forEach(panel => {
-                    panel.classList.remove('active');
-                    if (panel.id === target) {
-                        panel.classList.add('active');
-                    }
-                });
-            });
-        });
-    });
-</script>
 <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 {% endblock %}
