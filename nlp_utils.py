@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 # Ensure deterministic language detection
 DetectorFactory.seed = 0
 
-# Download necessary NLTK resources
+# Download necessary NLTK resources with better error handling
 required_resources = [
     'punkt', 'stopwords', 'wordnet', 'averaged_perceptron_tagger',
     'maxent_ne_chunker', 'words', 'vader_lexicon', 'omw-1.4'
@@ -57,11 +57,11 @@ except OSError:
 def perform_tokenization(text, library='nltk'):
     """
     Split text into words and sentences.
-    
+
     Args:
         text (str): The text to tokenize
         library (str): The library to use ('nltk' or 'spacy')
-        
+
     Returns:
         dict: Dictionary with tokenization results
     """
@@ -95,11 +95,11 @@ def perform_tokenization(text, library='nltk'):
 def perform_stopword_removal(text, library='nltk'):
     """
     Remove common words (stopwords) from text.
-    
+
     Args:
         text (str): The text to process
         library (str): The library to use ('nltk' or 'spacy')
-        
+
     Returns:
         dict: Dictionary with stopword removal results
     """
@@ -140,11 +140,11 @@ def perform_stopword_removal(text, library='nltk'):
 def perform_lemmatization(text, library='nltk'):
     """
     Reduce words to their base forms (lemmas).
-    
+
     Args:
         text (str): The text to lemmatize
         library (str): The library to use ('nltk' or 'spacy')
-        
+
     Returns:
         dict: Dictionary with lemmatization results
     """
@@ -191,11 +191,11 @@ def perform_lemmatization(text, library='nltk'):
 def perform_pos_tagging(text, library='nltk'):
     """
     Tag words with their part of speech (noun, verb, etc.).
-    
+
     Args:
         text (str): The text to analyze
         library (str): The library to use ('nltk' or 'spacy')
-        
+
     Returns:
         dict: Dictionary with POS tagging results
     """
@@ -240,11 +240,11 @@ def perform_pos_tagging(text, library='nltk'):
 def perform_ner(text, library='nltk'):
     """
     Identify and classify named entities (people, organizations, locations, etc.).
-    
+
     Args:
         text (str): The text to analyze
         library (str): The library to use ('nltk' or 'spacy')
-        
+
     Returns:
         dict: Dictionary with NER results
     """
@@ -302,11 +302,11 @@ def perform_ner(text, library='nltk'):
 def perform_sentiment_analysis(text, library='nltk'):
     """
     Analyze the sentiment of text (positive, negative, neutral).
-    
+
     Args:
         text (str): The text to analyze
         library (str): The library to use ('nltk' or other)
-        
+
     Returns:
         tuple: (result_dict, visualization_data)
     """
@@ -315,7 +315,7 @@ def perform_sentiment_analysis(text, library='nltk'):
         if library == 'nltk' or library == 'spacy':  # spaCy doesn't have built-in sentiment, use NLTK
             analyzer = SentimentIntensityAnalyzer()
             scores = analyzer.polarity_scores(text)
-            
+
             # Determine sentiment label
             if scores['compound'] >= 0.05:
                 sentiment = 'Positive'
@@ -323,14 +323,14 @@ def perform_sentiment_analysis(text, library='nltk'):
                 sentiment = 'Negative'
             else:
                 sentiment = 'Neutral'
-            
+
             # Prepare visualization data
             visual_data = [
                 {'name': 'Positive', 'value': scores['pos']},
                 {'name': 'Neutral', 'value': scores['neu']},
                 {'name': 'Negative', 'value': scores['neg']}
             ]
-            
+
             return {
                 'sentiment': sentiment,
                 'scores': scores,
@@ -346,11 +346,11 @@ def perform_sentiment_analysis(text, library='nltk'):
 def perform_text_summarization(text, library='nltk'):
     """
     Generate a summary of a longer text.
-    
+
     Args:
         text (str): The text to summarize
         library (str): The library to use ('nltk' or other)
-        
+
     Returns:
         dict: Dictionary with summary results
     """
@@ -359,7 +359,7 @@ def perform_text_summarization(text, library='nltk'):
         if library == 'nltk' or library == 'spacy':  # Use same algorithm for both
             # Split into sentences
             sentences = sent_tokenize(text)
-            
+
             if len(sentences) <= 2:
                 return {
                     'summary': text,
@@ -368,11 +368,11 @@ def perform_text_summarization(text, library='nltk'):
                     'summary_length': len(text),
                     'compression_ratio': 1.0
                 }
-            
+
             # Calculate word frequencies
             stop_words = set(stopwords.words('english'))
             word_frequencies = {}
-            
+
             for sentence in sentences:
                 for word in word_tokenize(sentence.lower()):
                     if word not in stop_words and word not in string.punctuation:
@@ -380,11 +380,11 @@ def perform_text_summarization(text, library='nltk'):
                             word_frequencies[word] = 1
                         else:
                             word_frequencies[word] += 1
-            
+
             # Normalize frequencies
             max_frequency = max(word_frequencies.values()) if word_frequencies else 1
             normalized_frequencies = {word: freq/max_frequency for word, freq in word_frequencies.items()}
-            
+
             # Score sentences
             sentence_scores = {}
             for i, sentence in enumerate(sentences):
@@ -394,15 +394,15 @@ def perform_text_summarization(text, library='nltk'):
                             sentence_scores[i] = normalized_frequencies[word]
                         else:
                             sentence_scores[i] += normalized_frequencies[word]
-            
+
             # Get top sentences (about 30% of original)
             summary_size = max(1, round(len(sentences) * 0.3))
             top_indices = sorted(sentence_scores, key=sentence_scores.get, reverse=True)[:summary_size]
             top_indices = sorted(top_indices)  # Sort by original order
-            
+
             summary_sentences = [sentences[i] for i in top_indices]
             summary = ' '.join(summary_sentences)
-            
+
             return {
                 'summary': summary,
                 'summary_sentences': summary_sentences,
@@ -420,11 +420,11 @@ def perform_text_summarization(text, library='nltk'):
 def perform_keyword_extraction(text, library='nltk'):
     """
     Extract the most important keywords from text.
-    
+
     Args:
         text (str): The text to analyze
         library (str): The library to use ('nltk' or 'spacy')
-        
+
     Returns:
         tuple: (result_dict, visualization_data)
     """
@@ -436,20 +436,20 @@ def perform_keyword_extraction(text, library='nltk'):
             words = word_tokenize(text.lower())
             filtered_words = [word for word in words if word not in stop_words and 
                              word not in string.punctuation and word.isalpha()]
-            
+
             # Use word frequencies as a simple keyword metric
             word_freq = Counter(filtered_words)
             total_words = len(filtered_words)
-            
+
             # Calculate scores (normalized frequency)
             keyword_scores = {word: count/total_words for word, count in word_freq.items()}
-            
+
             # Get top 10 keywords
             top_keywords = sorted(keyword_scores.items(), key=lambda x: x[1], reverse=True)[:10]
-            
+
             # Prepare visualization data
             visual_data = [{'name': word, 'value': score} for word, score in top_keywords]
-            
+
             return {
                 'keywords': dict(top_keywords),
                 'keyword_list': [{'word': word, 'score': score} for word, score in top_keywords]
@@ -464,12 +464,12 @@ def perform_keyword_extraction(text, library='nltk'):
 def perform_text_similarity(text1, text2, library='nltk'):
     """
     Calculate similarity between two texts.
-    
+
     Args:
         text1 (str): First text to compare
         text2 (str): Second text to compare
         library (str): The library to use ('nltk' or 'spacy')
-        
+
     Returns:
         tuple: (result_dict, visualization_data)
     """
@@ -478,18 +478,18 @@ def perform_text_similarity(text1, text2, library='nltk'):
             # Vectorize texts using TF-IDF
             vectorizer = TfidfVectorizer(stop_words='english')
             tfidf_matrix = vectorizer.fit_transform([text1, text2])
-            
+
             # Calculate cosine similarity
             similarity = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0]
-            
+
             # Get common and unique terms
             text1_tokens = set(word_tokenize(text1.lower()))
             text2_tokens = set(word_tokenize(text2.lower()))
-            
+
             common_terms = text1_tokens.intersection(text2_tokens)
             text1_unique = text1_tokens - text2_tokens
             text2_unique = text2_tokens - text1_tokens
-            
+
             # Visualization data
             visual_data = {
                 'similarity_score': similarity,
@@ -497,7 +497,7 @@ def perform_text_similarity(text1, text2, library='nltk'):
                 'text2_unique_count': len(text2_unique),
                 'common_terms_count': len(common_terms)
             }
-            
+
             return {
                 'similarity_score': similarity,
                 'common_terms': list(common_terms),
@@ -514,21 +514,21 @@ def perform_text_similarity(text1, text2, library='nltk'):
 def perform_language_detection(text, library='langdetect'):
     """
     Detect the language of a text.
-    
+
     Args:
         text (str): The text to analyze
         library (str): The library to use (only 'langdetect' supported currently)
-        
+
     Returns:
         dict: Dictionary with language detection results
     """
     try:
         # Language detection using langdetect
         language_code = detect(text)
-        
+
         # Get probability scores for different languages
         language_probabilities = detect_langs(text)
-        
+
         # Language name mapping (limited set)
         language_names = {
             'en': 'English',
@@ -547,9 +547,9 @@ def perform_language_detection(text, library='langdetect'):
             'nl': 'Dutch',
             'sv': 'Swedish'
         }
-        
+
         language_name = language_names.get(language_code, f'Unknown ({language_code})')
-        
+
         return {
             'language_code': language_code,
             'language_name': language_name,
@@ -564,10 +564,10 @@ def perform_language_detection(text, library='langdetect'):
 def get_task_explanation(task):
     """
     Get explanation data for the specified NLP task.
-    
+
     Args:
         task (str): The NLP task to explain
-        
+
     Returns:
         dict: Explanation data
     """
@@ -663,7 +663,7 @@ def get_task_explanation(task):
             }
         }
     }
-    
+
     return explanations.get(task, {
         'title': 'Unknown Task',
         'what': 'Information not available',
