@@ -36,14 +36,12 @@ def nlp_basics():
 @routes.route('/code-examples')
 def code_examples():
     """Render the code examples page."""
-    # Placeholder for future implementation
-    return render_template('errors/404.html')
+    return render_template('code_examples.html')
 
 @routes.route('/visualizations')
 def visualizations():
     """Render the visualizations page."""
-    # Placeholder for future implementation
-    return render_template('errors/404.html')
+    return render_template('visualizations.html')
 
 @routes.route('/api/process', methods=['POST'])
 def process():

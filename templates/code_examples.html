@@ -1,133 +1,220 @@
 {% extends 'base.html' %}
 
-{% block header_actions %}
-<div class="d-flex align-items-center gap-2">
-    <a href="/" class="btn btn-sm btn-outline-primary">
-        <i class="bi bi-tools me-1"></i> NLP Tools
-    </a>
-    <a href="/chat" class="btn btn-sm btn-outline-primary">
-        <i class="bi bi-chat-square-text me-1"></i> AI Assistant
-    </a>
-</div>
-{% endblock %}
+{% block title %}Code Examples - Linguista{% endblock %}
 
 {% block content %}
-<div class="code-playground-page">
-    <div class="page-header mb-4">
-        <h1 class="page-title">NLP Code Playground</h1>
-        <p class="text-muted">Experiment with NLP code using NLTK and spaCy, with Gemini AI assistance</p>
-    </div>
-    
-    <div class="row g-4">
-        <!-- Code Editor Column -->
-        <div class="col-lg-7">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-transparent border-bottom">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h2 class="fs-5 mb-0"><i class="bi bi-code-slash me-2"></i>Code Editor</h2>
-                        <div class="d-flex gap-2">
-                            <select class="form-select form-select-sm" id="library-select">
-                                <option value="nltk">NLTK</option>
-                                <option value="spacy">spaCy</option>
-                            </select>
-                            <select class="form-select form-select-sm" id="example-select">
-                                <option value="">-- Choose Example --</option>
-                                <option value="tokenization">Tokenization</option>
-                                <option value="stopwords">Stopword Removal</option>
-                                <option value="lemmatization">Lemmatization</option>
-                                <option value="pos_tagging">POS Tagging</option>
-                                <option value="ner">Named Entity Recognition</option>
-                                <option value="sentiment">Sentiment Analysis</option>
-                            </select>
-                        </div>
-                    </div>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">NLP Code Examples</h1>
+            
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" id="code-examples-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="library-comparison-tab" data-bs-toggle="tab" href="#library-comparison">Library Comparison</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="pair-programming-tab" data-bs-toggle="tab" href="#pair-programming">Pair Programming</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="code-templates-tab" data-bs-toggle="tab" href="#code-templates">Templates</a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="card-body p-0 d-flex flex-column">
-                    <div class="code-editor-toolbar p-2 border-bottom">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <button class="btn btn-sm btn-outline-primary" id="run-btn">
-                                    <i class="bi bi-play-fill me-1"></i> Run
-                                </button>
-                                <button class="btn btn-sm btn-outline-primary" id="compare-btn">
-                                    <i class="bi bi-arrow-left-right me-1"></i> Compare with 
-                                    <span id="alt-library">spaCy</span>
-                                </button>
+                <div class="card-body">
+                    <div class="tab-content" id="code-examples-content">
+                        <!-- Library Comparison Tab -->
+                        <div class="tab-pane fade show active" id="library-comparison">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="source-library">Source Library:</label>
+                                        <select class="form-select" id="source-library">
+                                            <option value="nltk" selected>NLTK</option>
+                                            <option value="spacy">spaCy</option>
+                                            <option value="scikit-learn">scikit-learn</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="target-library">Target Library:</label>
+                                        <select class="form-select" id="target-library">
+                                            <option value="nltk">NLTK</option>
+                                            <option value="spacy" selected>spaCy</option>
+                                            <option value="scikit-learn">scikit-learn</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="btn-group">
-                                <button class="btn btn-sm btn-outline-secondary" id="clear-btn">
-                                    <i class="bi bi-trash me-1"></i> Clear
-                                </button>
-                                <button class="btn btn-sm btn-outline-secondary" id="copy-btn">
-                                    <i class="bi bi-clipboard me-1"></i> Copy
-                                </button>
+                            
+                            <div class="form-group mb-3">
+                                <label for="source-code">Your NLP Code:</label>
+                                <textarea class="form-control code-editor" id="source-code" rows="10" placeholder="Enter your NLP code to translate between libraries..."></textarea>
+                            </div>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="include-performance" checked>
+                                <label class="form-check-label" for="include-performance">
+                                    Include performance comparison
+                                </label>
+                            </div>
+                            
+                            <button class="btn btn-primary" id="compare-libraries-btn">
+                                <i class="bi bi-translate"></i> Compare Libraries
+                            </button>
+                            
+                            <div class="mt-4" id="comparison-result" style="display: none;">
+                                <div class="alert alert-info">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <span class="ms-2">Comparing libraries...</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4" id="comparison-results-container" style="display: none;">
+                                <h4>Equivalent Code</h4>
+                                <pre><code id="comparison-code" class="language-python"></code></pre>
+                                
+                                <div id="comparison-explanation" class="mt-3 mb-3"></div>
+                                
+                                <div id="performance-comparison" class="mt-3"></div>
                             </div>
                         </div>
-                    </div>
-                    <div class="code-editor-container flex-grow-1">
-                        <textarea id="code-editor" class="form-control h-100 code-textarea border-0" style="min-height: 350px;">import nltk
-from nltk.tokenize import word_tokenize
-
-# Sample text
-text = "Natural language processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence."
-
-# Tokenize the text
-tokens = word_tokenize(text)
-
-# Print the tokens
-print(f"Total tokens: {len(tokens)}")
-for token in tokens:
-    print(token)
-</textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Assistant Column -->
-        <div class="col-lg-5">
-            <div class="card border-0 shadow-sm h-100 d-flex flex-column">
-                <div class="card-header bg-transparent border-bottom">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h2 class="fs-5 mb-0"><i class="bi bi-robot me-2"></i>AI Pair Programming</h2>
-                        <button class="btn btn-sm btn-primary" id="ask-ai-btn">
-                            <i class="bi bi-lightbulb-fill me-1"></i> Ask Gemini
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body p-0 d-flex flex-column">
-                    <div class="code-output flex-grow-1 overflow-auto" id="code-output" style="max-height: 200px;">
-                        <div class="p-3 text-center text-muted">
-                            <i class="bi bi-terminal display-4"></i>
-                            <p>Output will appear here when you run your code</p>
-                        </div>
-                    </div>
-                    <div class="assistant-output flex-grow-1 overflow-auto" id="assistant-output">
-                        <div class="p-3">
-                            <h5 class="mb-3 border-bottom pb-2">Pair Programming Assistant</h5>
-                            <p>Get help with your NLP code! You can:</p>
-                            <ul>
-                                <li>Ask for explanations of how the code works</li>
-                                <li>Request suggestions for improvement</li>
-                                <li>Compare implementations between NLTK and spaCy</li>
-                                <li>Get performance tips and best practices</li>
-                            </ul>
-                            <div class="mt-3">
-                                <p class="text-muted small">Try asking:</p>
-                                <div class="d-flex flex-wrap gap-2 mt-2">
-                                    <button class="btn btn-sm btn-outline-secondary example-question-btn" data-question="Explain how this code works">Explain this code</button>
-                                    <button class="btn btn-sm btn-outline-secondary example-question-btn" data-question="How can I improve this code?">Improve this code</button>
-                                    <button class="btn btn-sm btn-outline-secondary example-question-btn" data-question="What's the difference between NLTK and spaCy for this task?">NLTK vs spaCy</button>
+                        
+                        <!-- Pair Programming Tab -->
+                        <div class="tab-pane fade" id="pair-programming">
+                            <div class="alert alert-info mb-3">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Describe what NLP task you want to implement, and Gemini will help you write it.
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label for="task-description">Task Description:</label>
+                                <textarea class="form-control" id="task-description" rows="3" placeholder="Describe the NLP task you want to implement..."></textarea>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="preferred-library">Preferred Library:</label>
+                                        <select class="form-select" id="preferred-library">
+                                            <option value="nltk" selected>NLTK</option>
+                                            <option value="spacy">spaCy</option>
+                                            <option value="scikit-learn">scikit-learn</option>
+                                            <option value="tensorflow">TensorFlow</option>
+                                            <option value="pytorch">PyTorch</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="experience-level">Your Experience Level:</label>
+                                        <select class="form-select" id="experience-level">
+                                            <option value="beginner" selected>Beginner</option>
+                                            <option value="intermediate">Intermediate</option>
+                                            <option value="advanced">Advanced</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-primary" id="generate-code-btn">
+                                <i class="bi bi-code-slash"></i> Generate Code
+                            </button>
+                            
+                            <div class="mt-4" id="pair-programming-result" style="display: none;">
+                                <div class="alert alert-info">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <span class="ms-2">Generating code...</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4" id="generated-code-container" style="display: none;">
+                                <h4>Generated Code</h4>
+                                <pre><code id="generated-code" class="language-python"></code></pre>
+                                
+                                <div id="code-explanation" class="mt-3"></div>
+                                
+                                <div class="mt-3">
+                                    <button class="btn btn-outline-primary" id="refine-code-btn">
+                                        <i class="bi bi-pencil"></i> Refine Code
+                                    </button>
+                                    <button class="btn btn-outline-secondary" id="copy-code-btn">
+                                        <i class="bi bi-clipboard"></i> Copy Code
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="assistant-input-container p-3 border-top">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="assistant-query" placeholder="Ask about your code...">
-                            <button class="btn btn-primary" type="button" id="submit-query-btn">
-                                <i class="bi bi-send"></i>
+                        
+                        <!-- Code Templates Tab -->
+                        <div class="tab-pane fade" id="code-templates">
+                            <div class="form-group mb-3">
+                                <label for="template-category">Template Category:</label>
+                                <select class="form-select" id="template-category">
+                                    <option value="tokenization" selected>Tokenization</option>
+                                    <option value="stopwords">Stopword Removal</option>
+                                    <option value="lemmatization">Lemmatization</option>
+                                    <option value="pos-tagging">POS Tagging</option>
+                                    <option value="ner">Named Entity Recognition</option>
+                                    <option value="sentiment">Sentiment Analysis</option>
+                                    <option value="text-classification">Text Classification</option>
+                                    <option value="embeddings">Word/Sentence Embeddings</option>
+                                </select>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="template-library">Library:</label>
+                                        <select class="form-select" id="template-library">
+                                            <option value="nltk" selected>NLTK</option>
+                                            <option value="spacy">spaCy</option>
+                                            <option value="huggingface">HuggingFace</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="template-complexity">Complexity:</label>
+                                        <select class="form-select" id="template-complexity">
+                                            <option value="basic" selected>Basic</option>
+                                            <option value="intermediate">Intermediate</option>
+                                            <option value="advanced">Advanced</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-primary" id="get-template-btn">
+                                <i class="bi bi-file-code"></i> Get Template
                             </button>
+                            
+                            <div class="mt-4" id="template-result" style="display: none;">
+                                <div class="alert alert-info">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <span class="ms-2">Fetching template...</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4" id="template-container" style="display: none;">
+                                <h4>Code Template</h4>
+                                <pre><code id="template-code" class="language-python"></code></pre>
+                                
+                                <div id="template-explanation" class="mt-3"></div>
+                                
+                                <div class="mt-3">
+                                    <button class="btn btn-outline-secondary" id="copy-template-btn">
+                                        <i class="bi bi-clipboard"></i> Copy Template
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -140,622 +227,382 @@ for token in tokens:
 {% block extra_scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const codeEditor = document.getElementById('code-editor');
-    const codeOutput = document.getElementById('code-output');
-    const assistantOutput = document.getElementById('assistant-output');
-    const assistantQuery = document.getElementById('assistant-query');
-    const submitQueryBtn = document.getElementById('submit-query-btn');
-    const runBtn = document.getElementById('run-btn');
-    const compareBtn = document.getElementById('compare-btn');
-    const clearBtn = document.getElementById('clear-btn');
-    const copyBtn = document.getElementById('copy-btn');
-    const librarySelect = document.getElementById('library-select');
-    const exampleSelect = document.getElementById('example-select');
-    const altLibrary = document.getElementById('alt-library');
-    const askAiBtn = document.getElementById('ask-ai-btn');
-    const exampleQuestionBtns = document.querySelectorAll('.example-question-btn');
+    // Library Comparison Tab
+    const sourceLibrary = document.getElementById('source-library');
+    const targetLibrary = document.getElementById('target-library');
+    const sourceCode = document.getElementById('source-code');
+    const includePerformance = document.getElementById('include-performance');
+    const compareLibrariesBtn = document.getElementById('compare-libraries-btn');
+    const comparisonResult = document.getElementById('comparison-result');
+    const comparisonResultsContainer = document.getElementById('comparison-results-container');
+    const comparisonCode = document.getElementById('comparison-code');
+    const comparisonExplanation = document.getElementById('comparison-explanation');
+    const performanceComparison = document.getElementById('performance-comparison');
     
-    // Code Examples
-    const codeExamples = {
-        nltk: {
-            tokenization: `import nltk
-from nltk.tokenize import word_tokenize, sent_tokenize
-
-# Sample text
-text = "Natural language processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence. It focuses on the interactions between computers and human language."
-
-# Tokenize the text into sentences
-sentences = sent_tokenize(text)
-print(f"Sentences: {len(sentences)}")
-for i, sentence in enumerate(sentences):
-    print(f"Sentence {i+1}: {sentence}")
-
-# Tokenize the text into words
-tokens = word_tokenize(text)
-print(f"\\nTotal tokens: {len(tokens)}")
-print(f"Tokens: {tokens}")`,
-            
-            stopwords: `import nltk
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-
-# Sample text
-text = "Natural language processing is a subfield of computer science that focuses on the interactions between computers and human language."
-
-# Tokenize the text
-tokens = word_tokenize(text)
-print(f"Original tokens ({len(tokens)}): {tokens}")
-
-# Remove stopwords
-stop_words = set(stopwords.words('english'))
-filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
-
-print(f"\\nFiltered tokens ({len(filtered_tokens)}): {filtered_tokens}")
-print(f"Removed {len(tokens) - len(filtered_tokens)} stopwords")`,
-            
-            lemmatization: `import nltk
-from nltk.tokenize import word_tokenize
-from nltk.stem import WordNetLemmatizer
-from nltk.corpus import wordnet
-
-# Function to get WordNet POS tag
-def get_wordnet_pos(tag):
-    if tag.startswith('J'):
-        return wordnet.ADJ
-    elif tag.startswith('V'):
-        return wordnet.VERB
-    elif tag.startswith('N'):
-        return wordnet.NOUN
-    elif tag.startswith('R'):
-        return wordnet.ADV
-    else:
-        return wordnet.NOUN  # Default to noun
-
-# Sample text
-text = "The cats are running in the garden. They were eating the food that was prepared by their owners."
-
-# Initialize lemmatizer
-lemmatizer = WordNetLemmatizer()
-
-# Tokenize and POS tag
-tokens = word_tokenize(text)
-pos_tags = nltk.pos_tag(tokens)
-
-# Lemmatize with POS tag
-lemmatized_tokens = []
-for word, tag in pos_tags:
-    wordnet_pos = get_wordnet_pos(tag)
-    lemma = lemmatizer.lemmatize(word, pos=wordnet_pos)
-    lemmatized_tokens.append((word, lemma, tag))
-
-# Print results
-print("Original tokens:", tokens)
-print("\\nLemmatization results:")
-for original, lemma, tag in lemmatized_tokens:
-    if original != lemma:
-        print(f"{original} ({tag}) → {lemma}")`,
-            
-            pos_tagging: `import nltk
-from nltk.tokenize import word_tokenize
-
-# Sample text
-text = "The quick brown fox quickly jumps over the lazy dog. I love to read interesting books about artificial intelligence."
-
-# Tokenize and tag parts of speech
-tokens = word_tokenize(text)
-pos_tags = nltk.pos_tag(tokens)
-
-# Create a simplified tag mapping
-simplified_tags = {
-    'NN': 'Noun', 'NNS': 'Noun (plural)', 'NNP': 'Proper noun', 'NNPS': 'Proper noun (plural)',
-    'VB': 'Verb', 'VBD': 'Verb (past)', 'VBG': 'Verb (gerund)', 'VBN': 'Verb (past part)', 
-    'VBP': 'Verb (present)', 'VBZ': 'Verb (3rd person)',
-    'JJ': 'Adjective', 'JJR': 'Adjective (comparative)', 'JJS': 'Adjective (superlative)',
-    'RB': 'Adverb', 'RBR': 'Adverb (comparative)', 'RBS': 'Adverb (superlative)',
-    'DT': 'Determiner', 'IN': 'Preposition', 'PRP': 'Pronoun', 'PRP$': 'Possessive pronoun'
-}
-
-# Group words by part of speech
-pos_groups = {}
-for word, tag in pos_tags:
-    simple_tag = simplified_tags.get(tag, tag)
-    if simple_tag not in pos_groups:
-        pos_groups[simple_tag] = []
-    pos_groups[simple_tag].append(word)
-
-# Print results
-print("Part-of-Speech Tags:")
-for word, tag in pos_tags:
-    simple_tag = simplified_tags.get(tag, tag)
-    print(f"{word}: {simple_tag} ({tag})")
-
-print("\\nWords by Category:")
-for pos, words in pos_groups.items():
-    if len(words) > 0:
-        print(f"{pos}: {', '.join(words)}")`,
-            
-            ner: `import nltk
-from nltk.tokenize import word_tokenize
-
-# Sample text
-text = "Apple Inc. was founded by Steve Jobs in California. Microsoft is headquartered in Redmond, Washington. Elon Musk is the CEO of Tesla and SpaceX."
-
-# Tokenize
-tokens = word_tokenize(text)
-
-# Perform part-of-speech tagging
-pos_tags = nltk.pos_tag(tokens)
-
-# Perform named entity recognition
-named_entities = nltk.ne_chunk(pos_tags)
-
-# Extract named entities
-entity_info = []
-current_entity = []
-current_type = None
-
-# Process the tree to extract entities
-for chunk in named_entities:
-    if hasattr(chunk, 'label'):
-        entity_type = chunk.label()
-        entity_text = ' '.join([token for token, pos in chunk.leaves()])
-        entity_info.append((entity_text, entity_type))
-    elif current_type:
-        current_entity.append(chunk[0])
+    // Pair Programming Tab
+    const taskDescription = document.getElementById('task-description');
+    const preferredLibrary = document.getElementById('preferred-library');
+    const experienceLevel = document.getElementById('experience-level');
+    const generateCodeBtn = document.getElementById('generate-code-btn');
+    const pairProgrammingResult = document.getElementById('pair-programming-result');
+    const generatedCodeContainer = document.getElementById('generated-code-container');
+    const generatedCode = document.getElementById('generated-code');
+    const codeExplanation = document.getElementById('code-explanation');
+    const refineCodeBtn = document.getElementById('refine-code-btn');
+    const copyCodeBtn = document.getElementById('copy-code-btn');
     
-# Print recognized entities
-print("Named Entities:")
-for entity, entity_type in entity_info:
-    print(f"{entity}: {entity_type}")
-
-# Group entities by type
-entity_groups = {}
-for entity, entity_type in entity_info:
-    if entity_type not in entity_groups:
-        entity_groups[entity_type] = []
-    entity_groups[entity_type].append(entity)
-
-print("\\nEntities by Type:")
-for entity_type, entities in entity_groups.items():
-    print(f"{entity_type}: {', '.join(entities)}")`,
-            
-            sentiment: `import nltk
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-
-# Initialize the VADER sentiment analyzer
-sid = SentimentIntensityAnalyzer()
-
-# Sample texts with different sentiments
-texts = [
-    "I absolutely love this product! It's amazing and exceeded all my expectations.",
-    "The service was okay, but could have been better. The price was reasonable though.",
-    "This was a terrible experience. I'm very disappointed and won't be coming back."
-]
-
-# Analyze sentiment for each text
-print("Sentiment Analysis Results:\\n")
-for i, text in enumerate(texts):
-    # Get sentiment scores
-    scores = sid.polarity_scores(text)
+    // Templates Tab
+    const templateCategory = document.getElementById('template-category');
+    const templateLibrary = document.getElementById('template-library');
+    const templateComplexity = document.getElementById('template-complexity');
+    const getTemplateBtn = document.getElementById('get-template-btn');
+    const templateResult = document.getElementById('template-result');
+    const templateContainer = document.getElementById('template-container');
+    const templateCode = document.getElementById('template-code');
+    const templateExplanation = document.getElementById('template-explanation');
+    const copyTemplateBtn = document.getElementById('copy-template-btn');
     
-    # Determine sentiment category
-    compound = scores['compound']
-    if compound >= 0.05:
-        sentiment = "Positive"
-    elif compound <= -0.05:
-        sentiment = "Negative"
-    else:
-        sentiment = "Neutral"
-    
-    # Print results
-    print(f"Text {i+1}: {text}")
-    print(f"  Positive score: {scores['pos']:.3f}")
-    print(f"  Neutral score: {scores['neu']:.3f}")
-    print(f"  Negative score: {scores['neg']:.3f}")
-    print(f"  Compound score: {scores['compound']:.3f}")
-    print(f"  Overall sentiment: {sentiment}\\n")`
-        },
-        
-        spacy: {
-            tokenization: `import spacy
-
-# Load spaCy model
-nlp = spacy.load("en_core_web_sm")
-
-# Sample text
-text = "Natural language processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence. It focuses on the interactions between computers and human language."
-
-# Process the text
-doc = nlp(text)
-
-# Extract sentences
-sentences = list(doc.sents)
-print(f"Sentences: {len(sentences)}")
-for i, sentence in enumerate(sentences):
-    print(f"Sentence {i+1}: {sentence}")
-
-# Extract tokens
-print(f"\\nTotal tokens: {len(doc)}")
-tokens = [token.text for token in doc]
-print(f"Tokens: {tokens}")`,
-            
-            stopwords: `import spacy
-
-# Load spaCy model
-nlp = spacy.load("en_core_web_sm")
-
-# Sample text
-text = "Natural language processing is a subfield of computer science that focuses on the interactions between computers and human language."
-
-# Process the text
-doc = nlp(text)
-
-# Get all tokens
-all_tokens = [token.text for token in doc]
-print(f"Original tokens ({len(all_tokens)}): {all_tokens}")
-
-# Filter out stopwords
-filtered_tokens = [token.text for token in doc if not token.is_stop]
-
-print(f"\\nFiltered tokens ({len(filtered_tokens)}): {filtered_tokens}")
-print(f"Removed {len(all_tokens) - len(filtered_tokens)} stopwords")`,
-            
-            lemmatization: `import spacy
-
-# Load spaCy model
-nlp = spacy.load("en_core_web_sm")
-
-# Sample text
-text = "The cats are running in the garden. They were eating the food that was prepared by their owners."
-
-# Process the text
-doc = nlp(text)
-
-# Get lemmatization results
-lemmatization_results = []
-for token in doc:
-    if token.lemma_ != token.text:
-        lemmatization_results.append((token.text, token.lemma_, token.pos_))
-
-# Print results
-print("Original text:", text)
-print("\\nTokens in the text:")
-for token in doc:
-    print(f"{token.text} - POS: {token.pos_}, Lemma: {token.lemma_}")
-
-print("\\nLemmatization changes:")
-for original, lemma, pos in lemmatization_results:
-    print(f"{original} ({pos}) → {lemma}")`,
-            
-            pos_tagging: `import spacy
-
-# Load spaCy model
-nlp = spacy.load("en_core_web_sm")
-
-# Sample text
-text = "The quick brown fox quickly jumps over the lazy dog. I love to read interesting books about artificial intelligence."
-
-# Process the text
-doc = nlp(text)
-
-# Group words by part of speech
-pos_groups = {}
-for token in doc:
-    if token.pos_ not in pos_groups:
-        pos_groups[token.pos_] = []
-    pos_groups[token.pos_].append(token.text)
-
-# Print part-of-speech information
-print("Part-of-Speech Tags:")
-for token in doc:
-    print(f"{token.text}: {token.pos_} (Detailed: {token.tag_})")
-
-print("\\nWords by Category:")
-for pos, words in pos_groups.items():
-    if len(words) > 0:
-        print(f"{pos}: {', '.join(words)}")`,
-            
-            ner: `import spacy
-
-# Load spaCy model
-nlp = spacy.load("en_core_web_sm")
-
-# Sample text
-text = "Apple Inc. was founded by Steve Jobs in California. Microsoft is headquartered in Redmond, Washington. Elon Musk is the CEO of Tesla and SpaceX."
-
-# Process the text
-doc = nlp(text)
-
-# Extract named entities
-entities = [(ent.text, ent.label_) for ent in doc.ents]
-
-# Print recognized entities
-print("Named Entities:")
-for entity, label in entities:
-    print(f"{entity}: {label}")
-
-# Group entities by type
-entity_groups = {}
-for entity, label in entities:
-    if label not in entity_groups:
-        entity_groups[label] = []
-    entity_groups[label].append(entity)
-
-print("\\nEntities by Type:")
-for label, entities in entity_groups.items():
-    print(f"{label}: {', '.join(entities)}")`,
-            
-            sentiment: `import spacy
-from spacytextblob.spacytextblob import SpacyTextBlob
-
-# Load spaCy model and add TextBlob component
-nlp = spacy.load("en_core_web_sm")
-nlp.add_pipe("spacytextblob")
-
-# Sample texts with different sentiments
-texts = [
-    "I absolutely love this product! It's amazing and exceeded all my expectations.",
-    "The service was okay, but could have been better. The price was reasonable though.",
-    "This was a terrible experience. I'm very disappointed and won't be coming back."
-]
-
-# Analyze sentiment for each text
-print("Sentiment Analysis Results:\\n")
-for i, text in enumerate(texts):
-    # Process the text
-    doc = nlp(text)
-    
-    # Get sentiment scores
-    polarity = doc._.blob.polarity
-    subjectivity = doc._.blob.subjectivity
-    
-    # Determine sentiment category
-    if polarity > 0.05:
-        sentiment = "Positive"
-    elif polarity < -0.05:
-        sentiment = "Negative"
-    else:
-        sentiment = "Neutral"
-    
-    # Print results
-    print(f"Text {i+1}: {text}")
-    print(f"  Polarity score: {polarity:.3f}")
-    print(f"  Subjectivity score: {subjectivity:.3f}")
-    print(f"  Overall sentiment: {sentiment}\\n")`
-        }
-    };
-    
-    // Update alternative library indicator
-    librarySelect.addEventListener('change', function() {
-        const selectedLibrary = librarySelect.value;
-        altLibrary.textContent = selectedLibrary === 'nltk' ? 'spaCy' : 'NLTK';
-        
-        // Update code example if an example is selected
-        if (exampleSelect.value) {
-            updateCodeExample();
-        }
-    });
-    
-    // Load code example
-    exampleSelect.addEventListener('change', function() {
-        updateCodeExample();
-    });
-    
-    function updateCodeExample() {
-        const selectedLibrary = librarySelect.value;
-        const selectedExample = exampleSelect.value;
-        
-        if (selectedExample && codeExamples[selectedLibrary] && codeExamples[selectedLibrary][selectedExample]) {
-            codeEditor.value = codeExamples[selectedLibrary][selectedExample];
-        }
+    // Set up event listeners
+    if (compareLibrariesBtn) {
+        compareLibrariesBtn.addEventListener('click', compareLibraries);
     }
     
-    // Run code (mock implementation)
-    runBtn.addEventListener('click', function() {
-        codeOutput.innerHTML = '<div class="p-3"><div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div> Running code...</div>';
-        
-        // Simulate running the code
-        setTimeout(function() {
-            const selectedLibrary = librarySelect.value;
-            const selectedExample = exampleSelect.value;
-            
-            // Mock output based on example
-            let output = '<div class="p-3 border-bottom"><strong>Output:</strong></div><pre class="p-3 m-0">';
-            
-            if (selectedExample === 'tokenization') {
-                output += 'Sentences: 2\nSentence 1: Natural language processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence.\nSentence 2: It focuses on the interactions between computers and human language.\n\nTotal tokens: 30\nTokens: [\'Natural\', \'language\', \'processing\', \'(\', \'NLP\', \')\', \'is\', \'a\', \'subfield\', \'of\', \'linguistics\', \',\', \'computer\', \'science\', \',\', \'and\', \'artificial\', \'intelligence\', \'.\', \'It\', \'focuses\', \'on\', \'the\', \'interactions\', \'between\', \'computers\', \'and\', \'human\', \'language\', \'.\']';
-            } else if (selectedExample === 'stopwords') {
-                output += 'Original tokens (19): [\'Natural\', \'language\', \'processing\', \'is\', \'a\', \'subfield\', \'of\', \'computer\', \'science\', \'that\', \'focuses\', \'on\', \'the\', \'interactions\', \'between\', \'computers\', \'and\', \'human\', \'language\']\n\nFiltered tokens (12): [\'Natural\', \'language\', \'processing\', \'subfield\', \'computer\', \'science\', \'focuses\', \'interactions\', \'computers\', \'human\', \'language\']\nRemoved 7 stopwords';
-            } else {
-                output += 'Running your code...\nCheck the console for detailed output.';
-            }
-            
-            output += '</pre>';
-            codeOutput.innerHTML = output;
-        }, 1500);
-    });
+    if (generateCodeBtn) {
+        generateCodeBtn.addEventListener('click', generateCode);
+    }
     
-    // Compare with another library
-    compareBtn.addEventListener('click', function() {
-        const currentLibrary = librarySelect.value;
-        const targetLibrary = currentLibrary === 'nltk' ? 'spacy' : 'nltk';
-        const selectedExample = exampleSelect.value || 'tokenization';
+    if (getTemplateBtn) {
+        getTemplateBtn.addEventListener('click', getTemplate);
+    }
+    
+    if (refineCodeBtn) {
+        refineCodeBtn.addEventListener('click', refineCode);
+    }
+    
+    if (copyCodeBtn) {
+        copyCodeBtn.addEventListener('click', function() {
+            copyToClipboard(generatedCode.textContent);
+        });
+    }
+    
+    if (copyTemplateBtn) {
+        copyTemplateBtn.addEventListener('click', function() {
+            copyToClipboard(templateCode.textContent);
+        });
+    }
+    
+    // Library comparison function
+    function compareLibraries() {
+        const source = sourceLibrary.value;
+        const target = targetLibrary.value;
+        const code = sourceCode.value.trim();
+        const performance = includePerformance.checked;
+        
+        if (!code) {
+            alert('Please enter some code to compare');
+            return;
+        }
         
         // Show loading state
-        assistantOutput.innerHTML = '<div class="p-3 text-center"><div class="spinner-border text-primary" role="status"></div><p class="mt-3">Generating comparison...</p></div>';
+        comparisonResult.style.display = 'block';
+        comparisonResultsContainer.style.display = 'none';
         
-        // Simulate API call to get comparison
-        setTimeout(function() {
-            // Format request to get comparison from Gemini
-            const currentCode = codeEditor.value;
+        // Call API
+        fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: 'library_comparison',
+                code: code,
+                source_library: source,
+                target_library: target,
+                include_performance: performance
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            comparisonResult.style.display = 'none';
+            comparisonResultsContainer.style.display = 'block';
             
-            // API call would go here
-            // fetch('/api/chat', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         type: 'library_comparison',
-            //         code: currentCode,
-            //         source_library: currentLibrary,
-            //         target_library: targetLibrary
-            //     })
-            // })
-            
-            // Mock response for now
-            let response = `<div class="p-3">
-                <h5 class="mb-3 border-bottom pb-2">Library Comparison: ${currentLibrary.toUpperCase()} vs ${targetLibrary.toUpperCase()}</h5>
+            if (data.success) {
+                // Parse the response from Gemini to extract code and explanation
+                const response = data.response;
                 
-                <h6>Equivalent code in ${targetLibrary.toUpperCase()}:</h6>
-                <pre class="bg-light p-2 rounded">${codeExamples[targetLibrary][selectedExample]}</pre>
+                // This is a simplified parsing approach - in production, you'd want more robust parsing
+                // Extract code blocks (assuming they're enclosed in ```python ... ```)
+                const codeMatch = response.match(/```python\s*([\s\S]*?)\s*```/);
+                let responseCode = codeMatch ? codeMatch[1] : '';
                 
-                <h6 class="mt-4">Key Differences:</h6>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>${currentLibrary.toUpperCase()}</th>
-                            <th>${targetLibrary.toUpperCase()}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>More intuitive for beginners with straightforward functions</td>
-                            <td>Object-oriented approach with a unified processing pipeline</td>
-                        </tr>
-                        <tr>
-                            <td>Lightweight with separate components for each task</td>
-                            <td>Integrated solution with consistent API across tasks</td>
-                        </tr>
-                        <tr>
-                            <td>Greater customization for academic/research use</td>
-                            <td>Optimized for production environments</td>
-                        </tr>
-                    </tbody>
-                </table>
+                // Remove code blocks to get the explanation
+                let explanation = response.replace(/```python\s*[\s\S]*?\s*```/g, '');
                 
-                <h6 class="mt-4">Performance Note:</h6>
-                <p>For this particular task, ${targetLibrary === 'spacy' ? 'spaCy generally offers better performance for larger texts due to its optimized C implementation' : 'NLTK is sufficient for small to medium texts though spaCy would be faster for larger datasets'}.</p>
-            </div>`;
-            
-            assistantOutput.innerHTML = response;
-        }, 2000);
-    });
-    
-    // Clear code editor
-    clearBtn.addEventListener('click', function() {
-        codeEditor.value = '';
-    });
-    
-    // Copy code to clipboard
-    copyBtn.addEventListener('click', function() {
-        codeEditor.select();
-        document.execCommand('copy');
-        
-        // Visual feedback
-        copyBtn.innerHTML = '<i class="bi bi-check2 me-1"></i> Copied';
-        setTimeout(function() {
-            copyBtn.innerHTML = '<i class="bi bi-clipboard me-1"></i> Copy';
-        }, 2000);
-    });
-    
-    // Ask AI about code
-    function askAI() {
-        const query = assistantQuery.value.trim();
-        if (!query) return;
-        
-        const code = codeEditor.value;
-        const userQuery = `<div class="p-3 border-bottom">
-            <div class="d-flex align-items-start">
-                <div class="me-2 text-primary">
-                    <i class="bi bi-person-fill"></i>
-                </div>
-                <div>
-                    <strong>You asked:</strong>
-                    <p class="mb-0">${query}</p>
-                </div>
-            </div>
-        </div>`;
-        
-        // Clear input
-        assistantQuery.value = '';
-        
-        // Show user query and thinking state
-        assistantOutput.innerHTML = userQuery + `<div class="p-3 text-center">
-            <div class="spinner-border text-primary" role="status"></div>
-            <p class="mt-2">Analyzing your code...</p>
-        </div>`;
-        
-        // Simulate API call
-        setTimeout(function() {
-            // Here you would make an actual API call to Gemini
-            // fetch('/api/chat', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         type: 'code_explanation',
-            //         code: code,
-            //         message: query
-            //     })
-            // })
-            
-            // Mock response
-            let aiResponse = `<div class="p-3">
-                <div class="d-flex align-items-start">
-                    <div class="me-2 text-primary">
-                        <i class="bi bi-robot"></i>
-                    </div>
-                    <div>
-                        <strong>Gemini explains:</strong>
-                        <div class="mt-2">
-                            <p>This code is performing basic tokenization, which is the process of splitting text into individual words and punctuation.</p>
-                            
-                            <p>Here's what each part does:</p>
-                            <ol>
-                                <li>It imports the necessary functions from NLTK</li>
-                                <li>Sets up a sample text about NLP</li>
-                                <li>Uses <code>word_tokenize()</code> to split the text into individual tokens</li>
-                                <li>Prints the total number of tokens and each individual token</li>
-                            </ol>
-                            
-                            <p>To improve this code, you could:</p>
-                            <ul>
-                                <li>Add sentence tokenization to see how text is split into sentences</li>
-                                <li>Add error handling in case NLTK resources aren't downloaded</li>
-                                <li>Implement more preprocessing steps like lowercasing or removing punctuation</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-            
-            assistantOutput.innerHTML = userQuery + aiResponse;
-        }, 2000);
+                // Display results
+                comparisonCode.textContent = responseCode;
+                comparisonExplanation.innerHTML = explanation;
+                
+                // If performance comparison was requested, extract that part
+                if (performance) {
+                    const performanceSection = explanation.match(/Performance Comparison:[\s\S]*$/);
+                    if (performanceSection) {
+                        performanceComparison.innerHTML = performanceSection[0];
+                    }
+                } else {
+                    performanceComparison.innerHTML = '';
+                }
+            } else {
+                comparisonCode.textContent = '';
+                comparisonExplanation.innerHTML = `<div class="alert alert-danger">Error: ${data.error}</div>`;
+                performanceComparison.innerHTML = '';
+            }
+        })
+        .catch(error => {
+            comparisonResult.style.display = 'none';
+            comparisonResultsContainer.style.display = 'block';
+            comparisonExplanation.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
+        });
     }
     
-    // Submit query on button click
-    submitQueryBtn.addEventListener('click', askAI);
-    
-    // Submit query on Enter
-    assistantQuery.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            askAI();
+    // Generate code function
+    function generateCode() {
+        const task = taskDescription.value.trim();
+        const library = preferredLibrary.value;
+        const level = experienceLevel.value;
+        
+        if (!task) {
+            alert('Please describe the task you want to implement');
+            return;
         }
-    });
-    
-    // "Ask Gemini" button functionality
-    askAiBtn.addEventListener('click', function() {
-        assistantQuery.value = "What does this code do and how can I improve it?";
-        askAI();
-    });
-    
-    // Example question buttons
-    exampleQuestionBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const question = btn.getAttribute('data-question');
-            assistantQuery.value = question;
-            askAI();
+        
+        // Show loading state
+        pairProgrammingResult.style.display = 'block';
+        generatedCodeContainer.style.display = 'none';
+        
+        // Create a detailed prompt
+        const prompt = `As a Python NLP developer, I need code for the following task: ${task}.
+        
+        Please use the ${library} library and write the code targeting a ${level} level programmer. Include:
+        1. Clear, well-commented code
+        2. Imports and any necessary setup
+        3. Explanation of key concepts and functions
+        4. Sample input/output if applicable`;
+        
+        // Call the chat API
+        fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: 'general',
+                message: prompt
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            pairProgrammingResult.style.display = 'none';
+            generatedCodeContainer.style.display = 'block';
+            
+            if (data.success) {
+                // Parse the response to extract code and explanation
+                const response = data.response;
+                
+                // Extract code blocks (assuming they're enclosed in ```python ... ```)
+                const codeMatch = response.match(/```python\s*([\s\S]*?)\s*```/);
+                let code = codeMatch ? codeMatch[1] : '';
+                
+                // If no python code block, look for generic code block
+                if (!code) {
+                    const genericCodeMatch = response.match(/```\s*([\s\S]*?)\s*```/);
+                    code = genericCodeMatch ? genericCodeMatch[1] : '';
+                }
+                
+                // Remove code blocks to get the explanation
+                let explanation = response.replace(/```python\s*[\s\S]*?\s*```/g, '')
+                                          .replace(/```\s*[\s\S]*?\s*```/g, '');
+                
+                // Display results
+                generatedCode.textContent = code;
+                codeExplanation.innerHTML = explanation;
+            } else {
+                generatedCode.textContent = '';
+                codeExplanation.innerHTML = `<div class="alert alert-danger">Error: ${data.error}</div>`;
+            }
+        })
+        .catch(error => {
+            pairProgrammingResult.style.display = 'none';
+            generatedCodeContainer.style.display = 'block';
+            codeExplanation.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
         });
-    });
+    }
+    
+    // Refine code function
+    function refineCode() {
+        const task = taskDescription.value.trim();
+        const code = generatedCode.textContent;
+        
+        if (!code) {
+            alert('No code to refine');
+            return;
+        }
+        
+        // Show loading state
+        pairProgrammingResult.style.display = 'block';
+        generatedCodeContainer.style.display = 'none';
+        
+        // Create a refinement prompt
+        const prompt = `Please refine the following code for the task: "${task}".
+        
+        Current code:
+        \`\`\`python
+        ${code}
+        \`\`\`
+        
+        Please improve it by:
+        1. Making it more efficient or elegant
+        2. Adding better error handling
+        3. Improving comments or documentation
+        4. Addressing any potential issues
+        
+        Return the improved code and explain what changed.`;
+        
+        // Call the chat API
+        fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: 'general',
+                message: prompt
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            pairProgrammingResult.style.display = 'none';
+            generatedCodeContainer.style.display = 'block';
+            
+            if (data.success) {
+                // Parse the response to extract code and explanation
+                const response = data.response;
+                
+                // Extract code blocks (assuming they're enclosed in ```python ... ```)
+                const codeMatch = response.match(/```python\s*([\s\S]*?)\s*```/);
+                let refinedCode = codeMatch ? codeMatch[1] : '';
+                
+                // If no python code block, look for generic code block
+                if (!refinedCode) {
+                    const genericCodeMatch = response.match(/```\s*([\s\S]*?)\s*```/);
+                    refinedCode = genericCodeMatch ? genericCodeMatch[1] : '';
+                }
+                
+                // Remove code blocks to get the explanation
+                let explanation = response.replace(/```python\s*[\s\S]*?\s*```/g, '')
+                                          .replace(/```\s*[\s\S]*?\s*```/g, '');
+                
+                // Display results
+                generatedCode.textContent = refinedCode || code;
+                codeExplanation.innerHTML = explanation;
+            } else {
+                codeExplanation.innerHTML += `<div class="alert alert-danger">Error: ${data.error}</div>`;
+            }
+        })
+        .catch(error => {
+            pairProgrammingResult.style.display = 'none';
+            generatedCodeContainer.style.display = 'block';
+            codeExplanation.innerHTML += `<div class="alert alert-danger">Error: ${error.message}</div>`;
+        });
+    }
+    
+    // Get template function
+    function getTemplate() {
+        const category = templateCategory.value;
+        const library = templateLibrary.value;
+        const complexity = templateComplexity.value;
+        
+        // Show loading state
+        templateResult.style.display = 'block';
+        templateContainer.style.display = 'none';
+        
+        // Create a template request prompt
+        const prompt = `As a Python NLP developer, I need a ${complexity} level code template for ${category} using the ${library} library.
+        
+        Please provide:
+        1. Clear, well-commented code
+        2. All necessary imports
+        3. A brief explanation of how it works
+        4. Sample input to test with`;
+        
+        // Call the chat API
+        fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: 'general',
+                message: prompt
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            templateResult.style.display = 'none';
+            templateContainer.style.display = 'block';
+            
+            if (data.success) {
+                // Parse the response to extract code and explanation
+                const response = data.response;
+                
+                // Extract code blocks (assuming they're enclosed in ```python ... ```)
+                const codeMatch = response.match(/```python\s*([\s\S]*?)\s*```/);
+                let templateCodeText = codeMatch ? codeMatch[1] : '';
+                
+                // If no python code block, look for generic code block
+                if (!templateCodeText) {
+                    const genericCodeMatch = response.match(/```\s*([\s\S]*?)\s*```/);
+                    templateCodeText = genericCodeMatch ? genericCodeMatch[1] : '';
+                }
+                
+                // Remove code blocks to get the explanation
+                let explanation = response.replace(/```python\s*[\s\S]*?\s*```/g, '')
+                                          .replace(/```\s*[\s\S]*?\s*```/g, '');
+                
+                // Display results
+                templateCode.textContent = templateCodeText;
+                templateExplanation.innerHTML = explanation;
+            } else {
+                templateCode.textContent = '';
+                templateExplanation.innerHTML = `<div class="alert alert-danger">Error: ${data.error}</div>`;
+            }
+        })
+        .catch(error => {
+            templateResult.style.display = 'none';
+            templateContainer.style.display = 'block';
+            templateExplanation.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
+        });
+    }
+    
+    // Utility function to copy text to clipboard
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(
+            function() {
+                alert('Code copied to clipboard!');
+            },
+            function(err) {
+                console.error('Could not copy text: ', err);
+                
+                // Fallback method
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Code copied to clipboard!');
+            }
+        );
+    }
 });
 </script>
 {% endblock %}

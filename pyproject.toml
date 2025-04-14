@@ -13,6 +13,7 @@ dependencies = [
     "nlp-utils>=0.6.2",
     "nltk>=3.9.1",
     "numpy>=2.2.4",
+    "openai>=1.73.0",
     "psycopg2-binary>=2.9.10",
     "scikit-learn>=1.6.1",
     "spacy>=3.8.5",

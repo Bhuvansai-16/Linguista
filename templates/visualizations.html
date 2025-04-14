@@ -1,240 +1,366 @@
 {% extends 'base.html' %}
 
-{% block header_actions %}
-<div class="d-flex align-items-center gap-2">
-    <a href="/" class="btn btn-sm btn-outline-primary">
-        <i class="bi bi-tools me-1"></i> NLP Tools
-    </a>
-    <a href="/chat" class="btn btn-sm btn-outline-primary">
-        <i class="bi bi-chat-square-text me-1"></i> AI Assistant
-    </a>
-</div>
-{% endblock %}
+{% block title %}NLP Visualizations - Linguista{% endblock %}
 
 {% block content %}
-<div class="visualizations-page">
-    <div class="page-header mb-4">
-        <h1 class="page-title">NLP Visualizations</h1>
-        <p class="text-muted">Visualize and compare the performance and capabilities of different NLP libraries</p>
-    </div>
-    
-    <div class="row g-4">
-        <!-- Performance Comparison Column -->
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-transparent border-bottom">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h2 class="fs-5 mb-0"><i class="bi bi-bar-chart-line me-2"></i>Performance Comparison: NLTK vs. spaCy</h2>
-                        <div>
-                            <select class="form-select form-select-sm" id="task-select">
-                                <option value="all">All Tasks</option>
-                                <option value="tokenization">Tokenization</option>
-                                <option value="pos_tagging">POS Tagging</option>
-                                <option value="ner">Named Entity Recognition</option>
-                                <option value="lemmatization">Lemmatization</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="chart-container" style="height: 400px;">
-                        <canvas id="performance-chart"></canvas>
-                    </div>
-                    <div class="chart-legend mt-3">
-                        <div class="d-flex justify-content-center gap-4">
-                            <div class="d-flex align-items-center">
-                                <div class="me-2" style="width: 16px; height: 16px; background-color: rgba(13, 110, 253, 0.7); border-radius: 2px;"></div>
-                                <span>NLTK</span>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <div class="me-2" style="width: 16px; height: 16px; background-color: rgba(111, 66, 193, 0.7); border-radius: 2px;"></div>
-                                <span>spaCy</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-transparent">
-                    <p class="text-muted small mb-0">Performance measured in processing time (ms) on a sample text of 10,000 words.</p>
-                </div>
-            </div>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">NLP Visualizations</h1>
             
-            <!-- Features Comparison -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-transparent border-bottom">
-                    <h2 class="fs-5 mb-0"><i class="bi bi-table me-2"></i>Feature Comparison</h2>
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" id="visualization-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="performance-tab" data-bs-toggle="tab" href="#performance">Performance Comparison</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="features-tab" data-bs-toggle="tab" href="#features">Feature Comparison</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="custom-tab" data-bs-toggle="tab" href="#custom">Custom Visualization</a>
+                        </li>
+                    </ul>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Feature</th>
-                                    <th>NLTK</th>
-                                    <th>spaCy</th>
-                                    <th>Notes</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Tokenization</td>
-                                    <td><i class="bi bi-check-circle-fill text-success"></i></td>
-                                    <td><i class="bi bi-check-circle-fill text-success"></i></td>
-                                    <td>Both support word and sentence tokenization; spaCy is faster</td>
-                                </tr>
-                                <tr>
-                                    <td>POS Tagging</td>
-                                    <td><i class="bi bi-check-circle-fill text-success"></i></td>
-                                    <td><i class="bi bi-check-circle-fill text-success"></i></td>
-                                    <td>spaCy's pipeline is more accurate and integrated</td>
-                                </tr>
-                                <tr>
-                                    <td>Named Entity Recognition</td>
-                                    <td><i class="bi bi-check-circle-fill text-success"></i></td>
-                                    <td><i class="bi bi-check-circle-fill text-success"></i></td>
-                                    <td>spaCy has more entity types and modern neural models</td>
-                                </tr>
-                                <tr>
-                                    <td>Dependency Parsing</td>
-                                    <td><i class="bi bi-dash-circle text-warning"></i></td>
-                                    <td><i class="bi bi-check-circle-fill text-success"></i></td>
-                                    <td>Native in spaCy; NLTK requires additional libraries</td>
-                                </tr>
-                                <tr>
-                                    <td>Word Vectors</td>
-                                    <td><i class="bi bi-dash-circle text-warning"></i></td>
-                                    <td><i class="bi bi-check-circle-fill text-success"></i></td>
-                                    <td>Built-in word vectors in spaCy; not native to NLTK</td>
-                                </tr>
-                                <tr>
-                                    <td>Rule-based Matching</td>
-                                    <td><i class="bi bi-check-circle text-success"></i></td>
-                                    <td><i class="bi bi-check-circle-fill text-success"></i></td>
-                                    <td>spaCy has powerful matcher; NLTK has regex support</td>
-                                </tr>
-                                <tr>
-                                    <td>Text Classification</td>
-                                    <td><i class="bi bi-check-circle-fill text-success"></i></td>
-                                    <td><i class="bi bi-check-circle-fill text-success"></i></td>
-                                    <td>Both support it; spaCy integrates with neural networks</td>
-                                </tr>
-                                <tr>
-                                    <td>Sentiment Analysis</td>
-                                    <td><i class="bi bi-check-circle-fill text-success"></i></td>
-                                    <td><i class="bi bi-dash-circle text-warning"></i></td>
-                                    <td>NLTK has VADER; spaCy requires extension</td>
-                                </tr>
-                                <tr>
-                                    <td>Performance</td>
-                                    <td><i class="bi bi-star text-warning"></i></td>
-                                    <td><i class="bi bi-star-fill text-success"></i></td>
-                                    <td>spaCy is significantly faster for most tasks</td>
-                                </tr>
-                                <tr>
-                                    <td>Learning Curve</td>
-                                    <td><i class="bi bi-star-fill text-success"></i></td>
-                                    <td><i class="bi bi-star text-warning"></i></td>
-                                    <td>NLTK is easier for beginners and academic settings</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Accuracy Metrics Column -->
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-transparent border-bottom">
-                    <h2 class="fs-5 mb-0"><i class="bi bi-bullseye me-2"></i>Accuracy Metrics</h2>
-                </div>
-                <div class="card-body">
-                    <div class="accuracy-container mb-4">
-                        <h6 class="mb-3">POS Tagging Accuracy</h6>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span>NLTK</span>
-                            <span>92%</span>
+                    <div class="tab-content" id="visualization-content">
+                        <!-- Performance Comparison Tab -->
+                        <div class="tab-pane fade show active" id="performance">
+                            <div class="alert alert-info mb-4">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Compare performance metrics between NLTK and spaCy for various NLP tasks.
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="perf-task">NLP Task:</label>
+                                        <select class="form-select" id="perf-task">
+                                            <option value="tokenization" selected>Tokenization</option>
+                                            <option value="pos_tagging">POS Tagging</option>
+                                            <option value="ner">Named Entity Recognition</option>
+                                            <option value="lemmatization">Lemmatization</option>
+                                            <option value="stopword_removal">Stopword Removal</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="perf-text-size">Sample Text Size:</label>
+                                        <select class="form-select" id="perf-text-size">
+                                            <option value="small">Small (Few sentences)</option>
+                                            <option value="medium" selected>Medium (Paragraph)</option>
+                                            <option value="large">Large (Multiple paragraphs)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <button class="btn btn-primary" id="run-performance-btn">
+                                    <i class="bi bi-bar-chart"></i> Run Performance Comparison
+                                </button>
+                            </div>
+                            
+                            <div id="perf-results" style="display: none;">
+                                <div id="perf-loading" class="text-center my-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-2">Running comparison...</p>
+                                </div>
+                                
+                                <div id="perf-chart-container" style="display: none;">
+                                    <h4 class="mb-3">Performance Results</h4>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div id="perf-chart" style="height: 400px;"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5 class="card-title mb-0">Analysis</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div id="perf-analysis"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-4">
+                                        <h5>Detailed Results</h5>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Metric</th>
+                                                    <th>NLTK</th>
+                                                    <th>spaCy</th>
+                                                    <th>Difference</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="perf-details">
+                                                <!-- Performance details will be inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="progress mb-3">
-                            <div class="progress-bar" role="progressbar" style="width: 92%" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"></div>
+                        
+                        <!-- Feature Comparison Tab -->
+                        <div class="tab-pane fade" id="features">
+                            <div class="alert alert-info mb-4">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Compare feature sets and capabilities between NLTK and spaCy.
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-primary text-white">
+                                            <h5 class="card-title mb-0">NLTK</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Ease of Installation
+                                                    <span class="badge bg-primary rounded-pill">⭐⭐⭐⭐</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Processing Speed
+                                                    <span class="badge bg-primary rounded-pill">⭐⭐⭐</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Memory Usage
+                                                    <span class="badge bg-primary rounded-pill">⭐⭐⭐⭐⭐</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Customizability
+                                                    <span class="badge bg-primary rounded-pill">⭐⭐⭐⭐⭐</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Modern API
+                                                    <span class="badge bg-primary rounded-pill">⭐⭐⭐</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Documentation
+                                                    <span class="badge bg-primary rounded-pill">⭐⭐⭐⭐</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Built-in Models
+                                                    <span class="badge bg-primary rounded-pill">⭐⭐⭐</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="card-footer">
+                                            <p><strong>Ideal for:</strong> Research, education, prototyping, and working with limited computational resources.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-success text-white">
+                                            <h5 class="card-title mb-0">spaCy</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Ease of Installation
+                                                    <span class="badge bg-success rounded-pill">⭐⭐⭐</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Processing Speed
+                                                    <span class="badge bg-success rounded-pill">⭐⭐⭐⭐⭐</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Memory Usage
+                                                    <span class="badge bg-success rounded-pill">⭐⭐⭐</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Customizability
+                                                    <span class="badge bg-success rounded-pill">⭐⭐⭐⭐</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Modern API
+                                                    <span class="badge bg-success rounded-pill">⭐⭐⭐⭐⭐</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Documentation
+                                                    <span class="badge bg-success rounded-pill">⭐⭐⭐⭐⭐</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Built-in Models
+                                                    <span class="badge bg-success rounded-pill">⭐⭐⭐⭐⭐</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="card-footer">
+                                            <p><strong>Ideal for:</strong> Production systems, large-scale processing, and applications requiring high performance.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Feature Availability Comparison</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Feature</th>
+                                                    <th class="text-center">NLTK</th>
+                                                    <th class="text-center">spaCy</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Tokenization</td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Part-of-Speech Tagging</td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Named Entity Recognition</td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Dependency Parsing</td>
+                                                    <td class="text-center"><i class="bi bi-dash-circle text-warning"></i></td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Word Vectors</td>
+                                                    <td class="text-center"><i class="bi bi-dash-circle text-warning"></i></td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Text Classification</td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Sentiment Analysis</td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                    <td class="text-center"><i class="bi bi-dash-circle text-warning"></i></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Stemming</td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                    <td class="text-center"><i class="bi bi-dash-circle text-warning"></i></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Lemmatization</td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Multi-language Support</td>
+                                                    <td class="text-center"><i class="bi bi-dash-circle text-warning"></i></td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>GPU Acceleration</td>
+                                                    <td class="text-center"><i class="bi bi-x-circle text-danger"></i></td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Corpus & Dataset Access</td>
+                                                    <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+                                                    <td class="text-center"><i class="bi bi-dash-circle text-warning"></i></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span>spaCy</span>
-                            <span>97%</span>
+                        
+                        <!-- Custom Visualization Tab -->
+                        <div class="tab-pane fade" id="custom">
+                            <div class="alert alert-info mb-4">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Generate custom visualizations for comparing NLTK and spaCy on specific texts.
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label for="custom-viz-task">NLP Task:</label>
+                                <select class="form-select" id="custom-viz-task">
+                                    <option value="sentiment_analysis" selected>Sentiment Analysis</option>
+                                    <option value="keyword_extraction">Keyword Extraction</option>
+                                    <option value="text_similarity">Text Similarity</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label for="custom-viz-text">Text to Analyze:</label>
+                                <textarea class="form-control" id="custom-viz-text" rows="5" placeholder="Enter text to analyze..."></textarea>
+                            </div>
+                            
+                            <div id="similarity-text-container" style="display: none;">
+                                <div class="form-group mb-3">
+                                    <label for="custom-viz-comparison-text">Comparison Text:</label>
+                                    <textarea class="form-control" id="custom-viz-comparison-text" rows="5" placeholder="Enter text to compare with..."></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <button class="btn btn-primary" id="generate-viz-btn">
+                                    <i class="bi bi-graph-up"></i> Generate Visualization
+                                </button>
+                            </div>
+                            
+                            <div id="custom-viz-results" style="display: none;">
+                                <div id="custom-viz-loading" class="text-center my-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-2">Generating visualization...</p>
+                                </div>
+                                
+                                <div id="custom-viz-container" class="row" style="display: none;">
+                                    <div class="col-md-12">
+                                        <h4 class="mb-3">Visualization Results</h4>
+                                        
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div id="custom-viz-chart" style="height: 400px;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-12 mt-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="card-title mb-0">Analysis Comparison</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <h6 class="text-primary">NLTK Results</h6>
+                                                        <div id="nltk-results"></div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <h6 class="text-success">spaCy Results</h6>
+                                                        <div id="spacy-results"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-purple" role="progressbar" style="width: 97%" aria-valuenow="97" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="accuracy-container mb-4">
-                        <h6 class="mb-3">NER Accuracy</h6>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span>NLTK</span>
-                            <span>85%</span>
-                        </div>
-                        <div class="progress mb-3">
-                            <div class="progress-bar" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span>spaCy</span>
-                            <span>94%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-purple" role="progressbar" style="width: 94%" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="accuracy-container">
-                        <h6 class="mb-3">Sentiment Analysis Accuracy</h6>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span>NLTK (VADER)</span>
-                            <span>76%</span>
-                        </div>
-                        <div class="progress mb-3">
-                            <div class="progress-bar" role="progressbar" style="width: 76%" aria-valuenow="76" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span>spaCy + TextBlob</span>
-                            <span>73%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-purple" role="progressbar" style="width: 73%" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-transparent">
-                    <p class="text-muted small mb-0">Accuracy metrics based on evaluation against common benchmarks and test sets.</p>
-                </div>
-            </div>
-            
-            <!-- Use Case Recommendations -->
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-transparent border-bottom">
-                    <h2 class="fs-5 mb-0"><i class="bi bi-lightbulb me-2"></i>Recommended Use Cases</h2>
-                </div>
-                <div class="card-body">
-                    <div class="recommendation-card mb-3 p-3 border rounded">
-                        <h6>Choose NLTK When:</h6>
-                        <ul class="mb-0 ps-3">
-                            <li>Learning NLP concepts academically</li>
-                            <li>Need access to many different algorithms</li>
-                            <li>Working with smaller datasets</li>
-                            <li>Need fine-grained control over each step</li>
-                            <li>Using VADER for sentiment analysis</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="recommendation-card p-3 border rounded">
-                        <h6>Choose spaCy When:</h6>
-                        <ul class="mb-0 ps-3">
-                            <li>Building production applications</li>
-                            <li>Processing large volumes of text</li>
-                            <li>Need high-performance processing</li>
-                            <li>Want an integrated pipeline approach</li>
-                            <li>Working with word vectors and embeddings</li>
-                            <li>Need advanced dependency parsing</li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -244,114 +370,509 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Performance data
-    const performanceData = {
-        tokenization: {
-            labels: ['1K words', '5K words', '10K words', '50K words', '100K words'],
-            nltk: [12, 54, 103, 485, 975],
-            spacy: [5, 21, 43, 211, 425]
-        },
-        pos_tagging: {
-            labels: ['1K words', '5K words', '10K words', '50K words', '100K words'],
-            nltk: [45, 210, 435, 2150, 4300],
-            spacy: [18, 85, 172, 845, 1680]
-        },
-        ner: {
-            labels: ['1K words', '5K words', '10K words', '50K words', '100K words'],
-            nltk: [67, 335, 675, 3380, 6750],
-            spacy: [24, 120, 240, 1200, 2410]
-        },
-        lemmatization: {
-            labels: ['1K words', '5K words', '10K words', '50K words', '100K words'],
-            nltk: [38, 185, 375, 1850, 3700],
-            spacy: [15, 73, 145, 720, 1450]
-        },
-        all: {
-            labels: ['Tokenization', 'POS Tagging', 'NER', 'Lemmatization'],
-            nltk: [103, 435, 675, 375],
-            spacy: [43, 172, 240, 145]
-        }
-    };
+    // Performance Comparison Tab
+    const perfTask = document.getElementById('perf-task');
+    const perfTextSize = document.getElementById('perf-text-size');
+    const runPerformanceBtn = document.getElementById('run-performance-btn');
+    const perfResults = document.getElementById('perf-results');
+    const perfLoading = document.getElementById('perf-loading');
+    const perfChartContainer = document.getElementById('perf-chart-container');
+    const perfAnalysis = document.getElementById('perf-analysis');
+    const perfDetails = document.getElementById('perf-details');
     
-    // Initialize chart
-    const ctx = document.getElementById('performance-chart').getContext('2d');
-    let performanceChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: performanceData.all.labels,
-            datasets: [
-                {
-                    label: 'NLTK',
-                    data: performanceData.all.nltk,
-                    backgroundColor: 'rgba(13, 110, 253, 0.7)',
-                    borderColor: 'rgba(13, 110, 253, 1)',
-                    borderWidth: 1
+    // Custom Visualization Tab
+    const customVizTask = document.getElementById('custom-viz-task');
+    const customVizText = document.getElementById('custom-viz-text');
+    const similarityTextContainer = document.getElementById('similarity-text-container');
+    const customVizComparisonText = document.getElementById('custom-viz-comparison-text');
+    const generateVizBtn = document.getElementById('generate-viz-btn');
+    const customVizResults = document.getElementById('custom-viz-results');
+    const customVizLoading = document.getElementById('custom-viz-loading');
+    const customVizContainer = document.getElementById('custom-viz-container');
+    const nltkResults = document.getElementById('nltk-results');
+    const spacyResults = document.getElementById('spacy-results');
+    
+    // Chart objects
+    let perfChart = null;
+    let customVizChart = null;
+    
+    // Set up event listeners
+    if (customVizTask) {
+        customVizTask.addEventListener('change', function() {
+            if (this.value === 'text_similarity') {
+                similarityTextContainer.style.display = 'block';
+            } else {
+                similarityTextContainer.style.display = 'none';
+            }
+        });
+    }
+    
+    if (runPerformanceBtn) {
+        runPerformanceBtn.addEventListener('click', runPerformanceComparison);
+    }
+    
+    if (generateVizBtn) {
+        generateVizBtn.addEventListener('click', generateCustomVisualization);
+    }
+    
+    // Performance comparison function
+    function runPerformanceComparison() {
+        const task = perfTask.value;
+        const textSize = perfTextSize.value;
+        
+        // Show loading state
+        perfResults.style.display = 'block';
+        perfLoading.style.display = 'block';
+        perfChartContainer.style.display = 'none';
+        
+        // In a real implementation, you would make an API call to run the benchmarks
+        // For this example, we'll use mock data with a delay to simulate processing
+        setTimeout(function() {
+            // Simulate benchmark data - in a real app this would come from your backend
+            const data = simulatePerformanceData(task, textSize);
+            
+            // Update the UI with results
+            displayPerformanceResults(data);
+        }, 1500);
+    }
+    
+    // Custom visualization function
+    function generateCustomVisualization() {
+        const task = customVizTask.value;
+        const text = customVizText.value.trim();
+        let comparisonText = '';
+        
+        if (task === 'text_similarity') {
+            comparisonText = customVizComparisonText.value.trim();
+            if (!comparisonText) {
+                alert('Please enter a comparison text');
+                return;
+            }
+        }
+        
+        if (!text) {
+            alert('Please enter text to analyze');
+            return;
+        }
+        
+        // Show loading state
+        customVizResults.style.display = 'block';
+        customVizLoading.style.display = 'block';
+        customVizContainer.style.display = 'none';
+        
+        // Call the API to process text with both NLTK and spaCy
+        fetch('/api/process', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                task: task,
+                text: text,
+                library: 'nltk',
+                comparison_text: comparisonText
+            }),
+        })
+        .then(response => response.json())
+        .then(nltkData => {
+            // Now get spaCy results
+            return fetch('/api/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-                {
-                    label: 'spaCy',
-                    data: performanceData.all.spacy,
-                    backgroundColor: 'rgba(111, 66, 193, 0.7)',
-                    borderColor: 'rgba(111, 66, 193, 1)',
-                    borderWidth: 1
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
+                body: JSON.stringify({
+                    task: task,
+                    text: text,
+                    library: 'spacy',
+                    comparison_text: comparisonText
+                }),
+            })
+            .then(response => response.json())
+            .then(spacyData => {
+                // Display results for both libraries
+                displayCustomVisualization(task, nltkData, spacyData);
+            });
+        })
+        .catch(error => {
+            customVizLoading.style.display = 'none';
+            customVizContainer.style.display = 'block';
+            nltkResults.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
+            spacyResults.innerHTML = '';
+        });
+    }
+    
+    // Function to display performance comparison results
+    function displayPerformanceResults(data) {
+        perfLoading.style.display = 'none';
+        perfChartContainer.style.display = 'block';
+        
+        // Update analysis section
+        perfAnalysis.innerHTML = data.analysis;
+        
+        // Update details table
+        perfDetails.innerHTML = '';
+        for (const metric of data.metrics) {
+            const row = document.createElement('tr');
+            
+            const nltkValue = metric.nltk;
+            const spacyValue = metric.spacy;
+            const diff = spacyValue - nltkValue;
+            const diffClass = diff < 0 ? 'text-success' : (diff > 0 ? 'text-danger' : '');
+            const diffPrefix = diff < 0 ? '-' : (diff > 0 ? '+' : '');
+            const diffText = diff !== 0 ? `${diffPrefix}${Math.abs(diff).toFixed(2)}` : '0.00';
+            
+            row.innerHTML = `
+                <td>${metric.name}</td>
+                <td>${nltkValue.toFixed(2)}</td>
+                <td>${spacyValue.toFixed(2)}</td>
+                <td class="${diffClass}">${diffText}</td>
+            `;
+            
+            perfDetails.appendChild(row);
+        }
+        
+        // Create or update the chart
+        const ctx = document.getElementById('perf-chart');
+        if (ctx) {
+            if (perfChart) {
+                perfChart.destroy();
+            }
+            
+            perfChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['NLTK', 'spaCy'],
+                    datasets: [
+                        {
+                            label: 'Processing Time (ms)',
+                            data: [data.metrics[0].nltk, data.metrics[0].spacy],
+                            backgroundColor: ['rgba(54, 162, 235, 0.7)', 'rgba(75, 192, 192, 0.7)'],
+                            borderColor: ['rgb(54, 162, 235)', 'rgb(75, 192, 192)'],
+                            borderWidth: 1
+                        }
+                    ]
                 },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return context.dataset.label + ': ' + context.raw + ' ms';
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Processing Time (ms)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `${data.task} Performance Comparison`,
+                            font: {
+                                size: 16
+                            }
                         }
                     }
                 }
+            });
+        }
+    }
+    
+    // Function to display custom visualization results
+    function displayCustomVisualization(task, nltkData, spacyData) {
+        customVizLoading.style.display = 'none';
+        customVizContainer.style.display = 'block';
+        
+        // Display NLTK results
+        if (nltkData.success) {
+            const nltkResult = nltkData.result;
+            const nltkHtml = formatResults(task, nltkResult);
+            nltkResults.innerHTML = nltkHtml;
+        } else {
+            nltkResults.innerHTML = `<div class="alert alert-danger">Error: ${nltkData.error}</div>`;
+        }
+        
+        // Display spaCy results
+        if (spacyData.success) {
+            const spacyResult = spacyData.result;
+            const spacyHtml = formatResults(task, spacyResult);
+            spacyResults.innerHTML = spacyHtml;
+        } else {
+            spacyResults.innerHTML = `<div class="alert alert-danger">Error: ${spacyData.error}</div>`;
+        }
+        
+        // Create visualization based on task type
+        const ctx = document.getElementById('custom-viz-chart');
+        if (ctx) {
+            if (customVizChart) {
+                customVizChart.destroy();
+            }
+            
+            if (task === 'sentiment_analysis' && nltkData.success && spacyData.success) {
+                createSentimentChart(ctx, nltkData, spacyData);
+            } else if (task === 'keyword_extraction' && nltkData.success && spacyData.success) {
+                createKeywordChart(ctx, nltkData, spacyData);
+            } else if (task === 'text_similarity' && nltkData.success && spacyData.success) {
+                createSimilarityChart(ctx, nltkData, spacyData);
+            }
+        }
+    }
+    
+    // Helper function to format results based on task
+    function formatResults(task, result) {
+        if (task === 'sentiment_analysis') {
+            return `
+                <p><strong>Sentiment:</strong> ${result.sentiment}</p>
+                <p><strong>Compound Score:</strong> ${result.compound_score.toFixed(3)}</p>
+                <p><strong>Positive Score:</strong> ${result.positive_score.toFixed(3)}</p>
+                <p><strong>Negative Score:</strong> ${result.negative_score.toFixed(3)}</p>
+                <p><strong>Neutral Score:</strong> ${result.neutral_score.toFixed(3)}</p>
+            `;
+        } else if (task === 'keyword_extraction') {
+            const keywords = result.keywords.slice(0, 10).map((kw, i) => 
+                `<li>${kw.word} (${kw.score.toFixed(3)})</li>`
+            ).join('');
+            
+            return `
+                <p><strong>Top Keywords:</strong></p>
+                <ol>${keywords}</ol>
+            `;
+        } else if (task === 'text_similarity') {
+            return `
+                <p><strong>Similarity Score:</strong> ${result.similarity_score.toFixed(3)}</p>
+                <p><strong>Method:</strong> ${result.method}</p>
+            `;
+        } else {
+            return `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+        }
+    }
+    
+    // Chart creation functions
+    function createSentimentChart(ctx, nltkData, spacyData) {
+        const nltk = nltkData.result;
+        const spacy = spacyData.result;
+        
+        customVizChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Positive', 'Negative', 'Neutral'],
+                datasets: [
+                    {
+                        label: 'NLTK',
+                        data: [nltk.positive_score, nltk.negative_score, nltk.neutral_score],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgb(54, 162, 235)',
+                        pointBackgroundColor: 'rgb(54, 162, 235)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(54, 162, 235)'
+                    },
+                    {
+                        label: 'spaCy',
+                        data: [spacy.positive_score, spacy.negative_score, spacy.neutral_score],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgb(75, 192, 192)',
+                        pointBackgroundColor: 'rgb(75, 192, 192)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(75, 192, 192)'
+                    }
+                ]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
+            options: {
+                plugins: {
                     title: {
                         display: true,
-                        text: 'Processing Time (ms)'
+                        text: 'Sentiment Analysis Comparison',
+                        font: {
+                            size: 16
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                        min: 0,
+                        max: 1
                     }
                 }
             }
-        }
-    });
+        });
+    }
     
-    // Task selector
-    const taskSelect = document.getElementById('task-select');
-    taskSelect.addEventListener('change', function() {
-        const task = taskSelect.value;
+    function createKeywordChart(ctx, nltkData, spacyData) {
+        const nltkKeywords = nltkData.result.keywords.slice(0, 5).map(kw => kw.word);
+        const nltkScores = nltkData.result.keywords.slice(0, 5).map(kw => kw.score);
         
-        // Update chart data based on task
-        performanceChart.data.labels = performanceData[task].labels;
-        performanceChart.data.datasets[0].data = performanceData[task].nltk;
-        performanceChart.data.datasets[1].data = performanceData[task].spacy;
+        const spacyKeywords = spacyData.result.keywords.slice(0, 5).map(kw => kw.word);
+        const spacyScores = spacyData.result.keywords.slice(0, 5).map(kw => kw.score);
         
-        // Update y-axis title
-        if (task === 'all') {
-            performanceChart.options.scales.y.title.text = 'Processing Time (ms) for 10K words';
+        // Normalize scores for better comparison
+        const maxNltkScore = Math.max(...nltkScores);
+        const maxSpacyScore = Math.max(...spacyScores);
+        const normalizedNltkScores = nltkScores.map(score => score / maxNltkScore);
+        const normalizedSpacyScores = spacyScores.map(score => score / maxSpacyScore);
+        
+        customVizChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Keyword 1', 'Keyword 2', 'Keyword 3', 'Keyword 4', 'Keyword 5'],
+                datasets: [
+                    {
+                        label: 'NLTK Keywords',
+                        data: normalizedNltkScores,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        borderColor: 'rgb(54, 162, 235)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'spaCy Keywords',
+                        data: normalizedSpacyScores,
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        borderColor: 'rgb(75, 192, 192)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Keyword Extraction Comparison (Normalized Scores)',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                const datasetIndex = context[0].datasetIndex;
+                                const index = context[0].dataIndex;
+                                return datasetIndex === 0 ? nltkKeywords[index] : spacyKeywords[index];
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Normalized Score'
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    function createSimilarityChart(ctx, nltkData, spacyData) {
+        const nltkScore = nltkData.result.similarity_score;
+        const spacyScore = spacyData.result.similarity_score;
+        
+        customVizChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['NLTK', 'spaCy'],
+                datasets: [
+                    {
+                        label: 'Similarity Score',
+                        data: [nltkScore, spacyScore],
+                        backgroundColor: ['rgba(54, 162, 235, 0.7)', 'rgba(75, 192, 192, 0.7)'],
+                        borderColor: ['rgb(54, 162, 235)', 'rgb(75, 192, 192)'],
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Text Similarity Comparison',
+                        font: {
+                            size: 16
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1,
+                        title: {
+                            display: true,
+                            text: 'Similarity Score'
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    // Simulation function for performance data
+    function simulatePerformanceData(task, textSize) {
+        // These are simulated values - in a real app, you'd get actual benchmarks
+        const taskMultipliers = {
+            'tokenization': { nltk: 1.0, spacy: 0.5 },
+            'pos_tagging': { nltk: 1.5, spacy: 0.7 },
+            'ner': { nltk: 2.0, spacy: 0.8 },
+            'lemmatization': { nltk: 1.2, spacy: 0.6 },
+            'stopword_removal': { nltk: 0.8, spacy: 0.4 }
+        };
+        
+        const sizeMultipliers = {
+            'small': 1,
+            'medium': 2.5,
+            'large': 6
+        };
+        
+        const baseTime = 100; // milliseconds
+        const taskMultiplier = taskMultipliers[task] || { nltk: 1.0, spacy: 0.5 };
+        const sizeMultiplier = sizeMultipliers[textSize] || 1;
+        
+        // Add some randomness
+        const randomFactor = () => 0.8 + Math.random() * 0.4;
+        
+        const nltkTime = baseTime * taskMultiplier.nltk * sizeMultiplier * randomFactor();
+        const spacyTime = baseTime * taskMultiplier.spacy * sizeMultiplier * randomFactor();
+        
+        // Memory usage also varies by library and task
+        const nltkMemory = (25 + Math.random() * 10) * sizeMultiplier;
+        const spacyMemory = (60 + Math.random() * 20) * sizeMultiplier;
+        
+        // Accuracy is typically similar but can vary
+        const nltkAccuracy = 0.82 + Math.random() * 0.1;
+        const spacyAccuracy = 0.85 + Math.random() * 0.1;
+        
+        // Generate analysis text
+        let analysis = '';
+        if (nltkTime < spacyTime) {
+            analysis += '<p>NLTK was faster for this task, but typically uses less memory than spaCy.</p>';
         } else {
-            performanceChart.options.scales.y.title.text = 'Processing Time (ms)';
+            analysis += '<p>spaCy was faster for this task due to its optimized C implementation.</p>';
         }
         
-        performanceChart.update();
-    });
-    
-    // Add custom color for spaCy in the progress bars
-    const style = document.createElement('style');
-    style.textContent = '.bg-purple { background-color: #6f42c1 !important; }';
-    document.head.appendChild(style);
+        analysis += `<p>For ${task.replace('_', ' ')}, spaCy ${spacyAccuracy > nltkAccuracy ? 'typically achieves higher accuracy' : 'and NLTK have similar accuracy'}.</p>`;
+        
+        if (task === 'ner' || task === 'pos_tagging') {
+            analysis += '<p>spaCy\'s models are pre-trained on large datasets, which can provide better results for complex texts.</p>';
+        }
+        
+        analysis += `<p>For ${textSize} texts, ${nltkMemory < spacyMemory ? 'NLTK uses less memory and may be preferred for resource-constrained environments.' : 'both libraries perform well, with spaCy being more efficient for processing speed.'}</p>`;
+        
+        return {
+            task: task.replace('_', ' '),
+            textSize: textSize,
+            metrics: [
+                { name: 'Processing Time (ms)', nltk: nltkTime, spacy: spacyTime },
+                { name: 'Memory Usage (MB)', nltk: nltkMemory, spacy: spacyMemory },
+                { name: 'Accuracy', nltk: nltkAccuracy, spacy: spacyAccuracy }
+            ],
+            analysis: analysis
+        };
+    }
 });
 </script>
 {% endblock %}

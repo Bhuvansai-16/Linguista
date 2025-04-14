@@ -1,12 +1,18 @@
 {% extends 'base.html' %}
 
+{% block title %}Server Error - Linguista{% endblock %}
+
 {% block content %}
-<div class="error-page text-center my-5 py-5">
-    <div class="error-code">500</div>
-    <h1 class="error-title mb-4">Server Error</h1>
-    <p class="error-message mb-4">Oops! Something went wrong on our end. We're working to fix the issue.</p>
-    <a href="/" class="btn btn-primary">
-        <i class="bi bi-house-door me-1"></i> Back to Home
-    </a>
+<div class="container text-center mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="display-1 text-danger">500</h1>
+            <h2 class="mb-4">Server Error</h2>
+            <p class="lead mb-5">Something went wrong on our end. Please try again later or contact support if the problem persists.</p>
+            <a href="{{ url_for('routes.index') }}" class="btn btn-primary">
+                <i class="bi bi-house-door me-2"></i> Back to Home
+            </a>
+        </div>
+    </div>
 </div>
 {% endblock %}
