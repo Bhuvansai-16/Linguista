@@ -1,11 +1,13 @@
-import os
 import logging
 import traceback
 from config import Config
 import google.generativeai as genai
+import os
 
+GEMINI_API_KEY = os.environ['GEMINI_API_KEY']
 # Setup logger
 logger = logging.getLogger(__name__)
+
 
 # Initialize Gemini
 def initialize_gemini():
@@ -13,7 +15,9 @@ def initialize_gemini():
     try:
         api_key = Config.GEMINI_API_KEY
         if not api_key:
-            logger.warning("GEMINI_API_KEY not found in environment variables. Gemini features will not work.")
+            logger.warning(
+                "GEMINI_API_KEY not found in environment variables. Gemini features will not work."
+            )
             return False
 
         genai.configure(api_key=api_key)
@@ -22,8 +26,10 @@ def initialize_gemini():
         logger.error(f"Error initializing Gemini: {str(e)}")
         return False
 
+
 # Initialize Gemini when module is loaded
 gemini_available = initialize_gemini()
+
 
 def create_gemini_prompt(prompt_type, **kwargs):
     """
@@ -70,14 +76,14 @@ Use markdown formatting for clarity. If the code is not NLP-related, explain thi
         source_lib = kwargs.get("source_library", "nltk")
         target_lib = kwargs.get("target_library", "spacy")
         include_performance = kwargs.get("include_performance", True)
-        
+
         performance_section = ""
         if include_performance:
             performance_section = """
 4. Performance comparison between the libraries for this specific task
 5. Scaling considerations for larger datasets or production environments
 """
-        
+
         return f"""You are an NLP expert assistant comparing different libraries. Convert the following {source_lib} code to equivalent {target_lib} code:
 
 Original code ({source_lib}):
@@ -92,9 +98,10 @@ Please provide:
 
 Use markdown formatting for clarity. If the code is not valid {source_lib} code or not NLP-related, explain this politely.
 """
-    
+
     else:
         return "No valid prompt type specified."
+
 
 def ask_gemini(question):
     """
@@ -109,15 +116,17 @@ def ask_gemini(question):
     try:
         if not gemini_available:
             return "Sorry, Gemini API is not available. Please check your API key."
-            
+
         prompt = create_gemini_prompt("general", question=question)
         model = genai.GenerativeModel(Config.GEMINI_MODEL)
         response = model.generate_content(prompt)
-        
+
         return response.text
     except Exception as e:
-        logger.error(f"Error asking Gemini: {str(e)}\n{traceback.format_exc()}")
+        logger.error(
+            f"Error asking Gemini: {str(e)}\n{traceback.format_exc()}")
         return f"Sorry, I couldn't generate a response due to an error: {str(e)}"
+
 
 def explain_code_with_gemini(code):
     """
@@ -132,17 +141,23 @@ def explain_code_with_gemini(code):
     try:
         if not gemini_available:
             return "Sorry, Gemini API is not available. Please check your API key."
-            
+
         prompt = create_gemini_prompt("code_explanation", code=code)
         model = genai.GenerativeModel(Config.GEMINI_MODEL)
         response = model.generate_content(prompt)
-        
+
         return response.text
     except Exception as e:
-        logger.error(f"Error explaining code with Gemini: {str(e)}\n{traceback.format_exc()}")
+        logger.error(
+            f"Error explaining code with Gemini: {str(e)}\n{traceback.format_exc()}"
+        )
         return f"Sorry, I couldn't explain the code due to an error: {str(e)}"
 
-def compare_libraries_with_gemini(code, source_library, target_library, include_performance=True):
+
+def compare_libraries_with_gemini(code,
+                                  source_library,
+                                  target_library,
+                                  include_performance=True):
     """
     Send code to Gemini for library comparison.
     
@@ -158,19 +173,19 @@ def compare_libraries_with_gemini(code, source_library, target_library, include_
     try:
         if not gemini_available:
             return "Sorry, Gemini API is not available. Please check your API key."
-            
-        prompt = create_gemini_prompt(
-            "library_comparison", 
-            code=code,
-            source_library=source_library,
-            target_library=target_library,
-            include_performance=include_performance
-        )
-        
+
+        prompt = create_gemini_prompt("library_comparison",
+                                      code=code,
+                                      source_library=source_library,
+                                      target_library=target_library,
+                                      include_performance=include_performance)
+
         model = genai.GenerativeModel(Config.GEMINI_MODEL)
         response = model.generate_content(prompt)
-        
+
         return response.text
     except Exception as e:
-        logger.error(f"Error comparing libraries with Gemini: {str(e)}\n{traceback.format_exc()}")
+        logger.error(
+            f"Error comparing libraries with Gemini: {str(e)}\n{traceback.format_exc()}"
+        )
         return f"Sorry, I couldn't compare the libraries due to an error: {str(e)}"
