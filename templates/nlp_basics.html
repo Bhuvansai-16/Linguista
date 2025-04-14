@@ -204,6 +204,80 @@ document.addEventListener('DOMContentLoaded', function() {
     const contentLoading = document.getElementById('content-loading');
     const generatedContent = document.getElementById('generated-content');
 
+    // Function to convert markdown to HTML
+    function convertMarkdownToHTML(markdown) {
+        if (!markdown) return '';
+        
+        // Convert headings
+        let html = markdown
+            .replace(/^# (.*?)$/gm, '<h2 class="mt-4 mb-3">$1</h2>')
+            .replace(/^## (.*?)$/gm, '<h3 class="mt-3 mb-2">$1</h3>')
+            .replace(/^### (.*?)$/gm, '<h4 class="mt-3 mb-2">$1</h4>')
+            .replace(/^#### (.*?)$/gm, '<h5 class="mt-2 mb-2">$1</h5>')
+            .replace(/^##### (.*?)$/gm, '<h6 class="mt-2 mb-2">$1</h6>');
+        
+        // Convert lists - first find list items
+        html = html
+            .replace(/^\* (.*?)$/gm, '<li>$1</li>')
+            .replace(/^- (.*?)$/gm, '<li>$1</li>')
+            .replace(/^(\d+)\. (.*?)$/gm, '<li>$2</li>');
+        
+        // Now wrap consecutive list items in ul/ol tags
+        let lines = html.split('\n');
+        let inList = false;
+        let listType = '';
+        let result = [];
+        
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i];
+            
+            if (line.startsWith('<li>')) {
+                if (!inList) {
+                    // Start a new list
+                    inList = true;
+                    listType = line.match(/^\d+\. /) ? 'ol' : 'ul';
+                    result.push(`<${listType} class="mb-3">`);
+                }
+                result.push(line);
+            } else {
+                if (inList) {
+                    // Close the current list
+                    result.push(`</${listType}>`);
+                    inList = false;
+                }
+                result.push(line);
+            }
+        }
+        
+        // Close any open list at the end
+        if (inList) {
+            result.push(`</${listType}>`);
+        }
+        
+        html = result.join('\n');
+        
+        // Convert code blocks
+        html = html.replace(/```([a-z]*)\n([\s\S]*?)```/gm, function(match, language, code) {
+            return `<pre class="bg-dark text-light p-3 rounded"><code class="language-${language || 'plaintext'}">${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;
+        });
+        
+        // Convert inline code
+        html = html.replace(/`([^`]+)`/g, '<code class="px-1 py-0 bg-light text-dark rounded">$1</code>');
+        
+        // Convert bold and italic
+        html = html
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        // Convert paragraphs (lines that aren't headings, lists, or code blocks)
+        html = html.replace(/^(?!<h[1-6]|<ul|<ol|<li|<pre|<\/)(.*?)$/gm, function(match, p1) {
+            if (p1.trim() === '') return match; // Skip empty lines
+            return `<p>${p1}</p>`;
+        });
+        
+        return html;
+    }
+
     function getSelectedLevel() {
         const levelRadios = document.getElementsByName('learning-level');
         for (const radio of levelRadios) {
@@ -225,7 +299,6 @@ document.addEventListener('DOMContentLoaded', function() {
         contentLoading.style.display = 'block';
         generatedContent.style.display = 'none';
 
-        // Mock API call - replace with actual Gemini API call
         fetch('/api/generate-learning-content', {
             method: 'POST',
             headers: {
@@ -240,7 +313,33 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             contentLoading.style.display = 'none';
             generatedContent.style.display = 'block';
-            generatedContent.innerHTML = data.content;
+            
+            if (data.success) {
+                // Convert markdown to HTML
+                const formattedContent = convertMarkdownToHTML(data.content);
+                
+                // Create a container for the formatted content with styling
+                generatedContent.innerHTML = `
+                    <div class="learning-content-formatted">
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h3 class="card-title mb-0">${topic.charAt(0).toUpperCase() + topic.slice(1)}</h3>
+                                <small>${level.charAt(0).toUpperCase() + level.slice(1)} level</small>
+                            </div>
+                            <div class="card-body">
+                                ${formattedContent}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                generatedContent.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        ${data.error || 'There was an error generating content. Please try again.'}
+                    </div>
+                `;
+            }
 
             // Scroll to the generated content
             generatedContent.scrollIntoView({ behavior: 'smooth' });
@@ -258,26 +357,70 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    generateContentBtn.addEventListener('click', function() {
-        const selectedTopic = topicSelect.value;
-        const level = getSelectedLevel();
-        generateContent(selectedTopic, level);
-    });
+    if (generateContentBtn) {
+        generateContentBtn.addEventListener('click', function() {
+            const selectedTopic = topicSelect.value;
+            const level = getSelectedLevel();
+            generateContent(selectedTopic, level);
+        });
+    }
 
-    customTopicBtn.addEventListener('click', function() {
-        const customTopic = customTopicInput.value.trim();
-        const level = getSelectedLevel();
-        generateContent(customTopic, level);
-    });
-
-    customTopicInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
+    if (customTopicBtn) {
+        customTopicBtn.addEventListener('click', function() {
             const customTopic = customTopicInput.value.trim();
             const level = getSelectedLevel();
             generateContent(customTopic, level);
-        }
-    });
+        });
+    }
+
+    if (customTopicInput) {
+        customTopicInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const customTopic = customTopicInput.value.trim();
+                const level = getSelectedLevel();
+                generateContent(customTopic, level);
+            }
+        });
+    }
 });
 </script>
+
+<style>
+/* Styles for the formatted learning content */
+.learning-content-formatted {
+    line-height: 1.6;
+}
+
+.learning-content-formatted h2 {
+    color: var(--bs-primary);
+    border-bottom: 1px solid var(--bs-border-color);
+    padding-bottom: 0.5rem;
+}
+
+.learning-content-formatted h3 {
+    color: var(--bs-primary);
+}
+
+.learning-content-formatted ul, 
+.learning-content-formatted ol {
+    padding-left: 1.5rem;
+}
+
+.learning-content-formatted code {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+.learning-content-formatted pre {
+    margin-bottom: 1.5rem;
+    border-radius: 0.375rem;
+    overflow: auto;
+}
+
+.learning-content-formatted pre code {
+    display: block;
+    padding: 1rem;
+    white-space: pre;
+}
+</style>
 {% endblock %}
