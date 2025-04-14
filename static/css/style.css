@@ -230,6 +230,7 @@ body {
 .stat-value {
     font-size: 1.25rem;
     font-weight: 600;
+    color: var(--bs-body-color); /* Added for light mode consistency */
 }
 
 /* Tools Page */
@@ -241,6 +242,7 @@ body {
     font-size: 1.75rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
+    color: var(--bs-body-color); /* Added for light mode consistency */
 }
 
 .explanation-container,
@@ -370,6 +372,7 @@ body {
     font-weight: 600;
     margin-bottom: 0.5rem;
     font-size: 0.875rem;
+    color: var(--bs-body-color); /* Added for light mode consistency */
 }
 
 .entity-display {
@@ -430,6 +433,7 @@ body {
     font-weight: 600;
     margin-bottom: 0.25rem;
     font-size: 0.875rem;
+    color: var(--bs-body-color); /* Added for light mode consistency */
 }
 
 .summary-display {
@@ -438,6 +442,8 @@ body {
     padding: 1rem;
     font-size: 0.9375rem;
     line-height: 1.6;
+    color: var(--bs-body-color); /* Added for light mode consistency */
+
 }
 
 .keyword-display {
@@ -455,6 +461,7 @@ body {
 .keyword-word {
     font-weight: 600;
     margin-bottom: 0.25rem;
+    color: var(--bs-body-color); /* Added for light mode consistency */
 }
 
 .keyword-score {
@@ -477,6 +484,7 @@ body {
 .probability-lang {
     font-weight: 600;
     margin-bottom: 0.25rem;
+    color: var(--bs-body-color); /* Added for light mode consistency */
 }
 
 .probability-value {
@@ -488,12 +496,14 @@ body {
 .explanation-content {
     font-size: 0.9375rem;
     line-height: 1.6;
+    color: var(--bs-body-color); /* Added for light mode consistency */
 }
 
 .explanation-title {
     font-size: 1.125rem;
     font-weight: 600;
     margin-bottom: 0.75rem;
+    color: var(--bs-body-color); /* Added for light mode consistency */
 }
 
 /* NLP Basics Page */
@@ -587,6 +597,7 @@ body {
 .error-title {
     font-size: 2rem;
     font-weight: 600;
+    color: var(--bs-body-color); /* Added for light mode consistency */
 }
 
 .error-message {
@@ -609,7 +620,7 @@ body {
     padding: 1.5rem;
     scrollbar-width: thin;
     scrollbar-color: var(--bs-primary) transparent;
-    color: #1a1a1a;
+    color: var(--bs-body-color);
     max-height: calc(100vh - 350px);
 }
 
@@ -817,33 +828,33 @@ pre {
     :root {
         --content-padding: 1rem;
     }
-    
+
     .app-sidebar {
         transform: translateX(-100%);
         box-shadow: none;
         z-index: 1040;
     }
-    
+
     .app-sidebar.open {
         transform: translateX(0);
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
-    
+
     .app-main {
         margin-left: 0;
     }
-    
+
     .mobile-header {
         display: flex;
         align-items: center;
         gap: 1rem;
     }
-    
+
     .mobile-logo {
         font-weight: 600;
         font-size: 1.25rem;
     }
-    
+
     .sidebar-open {
         background: none;
         border: none;
@@ -852,4 +863,22 @@ pre {
         cursor: pointer;
         padding: 0;
     }
+}
+
+[data-bs-theme="light"] {
+  --bs-primary: var(--primary-color);
+  --bs-primary-rgb: 98, 69, 255;
+  --bs-body-bg: #f8fafc;
+  --bs-body-color: #000000;
+  --bs-border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-bs-theme="light"] *,
+[data-bs-theme="light"] ::before,
+[data-bs-theme="light"] ::after {
+  color: #000000; /*Applies to all elements in light mode*/
+}
+
+[data-bs-theme="light"] .nav-link:hover {
+  color: var(--primary-color);
 }
