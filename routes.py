@@ -1,7 +1,12 @@
 import json
 from flask import (
-    render_template, request, jsonify, Blueprint
+    render_template, request, jsonify, Blueprint, current_app
 )
+from flask_cors import CORS
+
+# Enable CORS
+routes = Blueprint('routes', __name__)
+CORS(routes)
 from config import Config
 from utils import (
     validate_text_input,
