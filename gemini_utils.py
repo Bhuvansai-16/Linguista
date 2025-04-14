@@ -44,29 +44,34 @@ def create_gemini_prompt(prompt_type, **kwargs):
     """
     if prompt_type == "general":
         question = kwargs.get("question", "")
-        return f"""You are an NLP expert assistant helping a user understand natural language processing concepts and techniques.
+        return f"""You are an NLP trainer helping a user understand natural language processing concepts and techniques.
         
 Question: {question}
 
-Provide a clear, educational response using proper markdown formatting where appropriate. 
-Include relevant examples and explanations suitable for someone learning about NLP.
+Provide a concise, educational response with these characteristics:
+1. Keep explanations short and to the point (4-5 sentences maximum)
+2. Include a simple, concrete example that illustrates the concept
+3. Use simple language and avoid jargon when possible
+4. Format your response with markdown for better readability
+5. If applicable, include a brief code snippet to demonstrate the concept
+
 If the question isn't about NLP or is inappropriate, politely redirect to an NLP-related topic.
 """
 
     elif prompt_type == "code_explanation":
         code = kwargs.get("code", "")
-        return f"""You are an NLP expert assistant analyzing code. Explain the following NLP-related code:
+        return f"""You are an NLP trainer analyzing code. Explain the following NLP-related code:
 
 ```python
 {code}
 ```
 
-Provide a detailed explanation including:
-1. The overall purpose of the code
-2. A breakdown of key functions and their roles
-3. The NLP concepts and techniques being used
-4. Any potential issues or optimization opportunities
-5. How the code could be expanded or improved
+Provide a concise explanation with these characteristics:
+1. Start with a 1-2 sentence summary of what the code does
+2. Explain key NLP concepts demonstrated in the code (max 3-4 bullet points)
+3. Use simple language that a beginner could understand
+4. Include a brief example of how the code would process a specific input
+5. If there are any best practices or common pitfalls, mention them briefly
 
 Use markdown formatting for clarity. If the code is not NLP-related, explain this politely and offer to help with NLP code instead.
 """
@@ -80,23 +85,22 @@ Use markdown formatting for clarity. If the code is not NLP-related, explain thi
         performance_section = ""
         if include_performance:
             performance_section = """
-4. Performance comparison between the libraries for this specific task
-5. Scaling considerations for larger datasets or production environments
+4. A brief note on performance differences (1-2 sentences)
 """
 
-        return f"""You are an NLP expert assistant comparing different libraries. Convert the following {source_lib} code to equivalent {target_lib} code:
+        return f"""You are an NLP trainer helping users compare different libraries. Convert the following {source_lib} code to equivalent {target_lib} code:
 
 Original code ({source_lib}):
 ```python
 {code}
 ```
 
-Please provide:
-1. The equivalent code in {target_lib}
-2. A comparison of the approaches in both libraries
-3. Advantages and disadvantages of each implementation{performance_section}
+Please provide a concise educational response with:
+1. The equivalent code in {target_lib} (with comments explaining key differences)
+2. A brief side-by-side comparison table of the approaches (max 3 points)
+3. Key advantage of each library for this specific task (just 1 per library){performance_section}
 
-Use markdown formatting for clarity. If the code is not valid {source_lib} code or not NLP-related, explain this politely.
+Format your response with markdown for better readability. If the code is not valid {source_lib} code or not NLP-related, explain this politely.
 """
 
     else:

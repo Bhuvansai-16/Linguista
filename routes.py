@@ -198,6 +198,48 @@ def handle_chat():
             
     except Exception as e:
         return jsonify({'error': f'An error occurred: {str(e)}'}), 500
+        
+@routes.route('/api/generate-learning-content', methods=['POST'])
+def generate_learning_content():
+    """Generate NLP learning content with Gemini."""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'Invalid request data'}), 400
+            
+        topic = data.get('topic', '')
+        level = data.get('level', 'beginner')
+        
+        if not topic:
+            return jsonify({'error': 'Topic cannot be empty'}), 400
+        
+        # Create a prompt for Gemini to generate educational content
+        prompt = f"""
+        You are an expert NLP educator. Create educational content about "{topic}" for a {level} level student.
+        
+        Structure your response with the following sections:
+        1. Introduction - Brief overview of the topic (2-3 sentences)
+        2. Key Concepts - Explain the most important concepts (bullet points)
+        3. How it Works - Explain the technical details appropriate for a {level} level
+        4. Example - Provide a simple code example or pseudocode if applicable
+        5. Real-world Applications - How this is used in practice (bullet points)
+        6. Further Learning - 2-3 specific resources to learn more
+        
+        Make your explanations clear and concise with examples. Use analogies where helpful.
+        Format your response with Markdown for better readability.
+        """
+        
+        # Call Gemini API to generate content
+        response = ask_gemini(prompt)
+        
+        # Return the formatted content
+        return jsonify({
+            'success': True,
+            'content': response
+        })
+            
+    except Exception as e:
+        return jsonify({'error': f'An error occurred: {str(e)}'}), 500
 
 # Error handlers
 @routes.app_errorhandler(404)
