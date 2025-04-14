@@ -65,9 +65,6 @@ from langdetect import detect, detect_langs, DetectorFactory
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# Set up logging
-logger = logging.getLogger(__name__)
-
 # Ensure deterministic language detection
 DetectorFactory.seed = 0
 
