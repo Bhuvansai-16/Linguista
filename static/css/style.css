@@ -959,3 +959,47 @@ pre {
 [data-bs-theme="light"] .nav-link:hover {
   color: var(--primary-color);
 }
+
+/* Added styles for task results */
+.task-result {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+}
+
+.task-result .stat-card {
+    background-color: #2d2d2d;
+    color: #ffffff;
+}
+
+.task-result .token {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.task-result .pos-tag,
+.task-result .entity-tag,
+.task-result .sentence,
+.task-result .summary-display,
+.task-result .keyword-item,
+.task-result .probability-item,
+.task-result .score-item {
+    background-color: #2d2d2d;
+    color: #ffffff;
+}
+
+.task-result .stat-label,
+.task-result .pos-label,
+.task-result .entity-type,
+.task-result .keyword-score,
+.task-result .probability-value {
+    color: #cccccc;
+}
+
+.task-result .result-section-title {
+    color: #ffffff;
+}
