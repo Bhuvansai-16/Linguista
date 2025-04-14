@@ -446,17 +446,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function createVisualization(data, task) {
         // Ensure the canvas is visible and properly sized
         const chartContainer = document.getElementById('visualization-container');
-        if (!chartContainer) return;
-        
-        // Clear existing canvas and create new one
-        chartContainer.innerHTML = '';
-        const chartCanvas = document.createElement('canvas');
-        chartCanvas.id = 'chart-canvas';
-        chartContainer.appendChild(chartCanvas);
-        
-        chartContainer.style.display = 'block';
-        chartCanvas.style.height = '400px';
-        chartCanvas.style.width = '100%';
+        const chartCanvas = document.getElementById('chart-canvas');
+
+        if (chartContainer && chartCanvas) {
+            chartContainer.style.display = 'block';
+            chartCanvas.style.height = '400px';
+            chartCanvas.style.width = '100%';
 
 
             // Destroy previous chart if exists
