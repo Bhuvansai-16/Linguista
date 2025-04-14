@@ -12,6 +12,8 @@ body {
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
+    background-color: var(--bs-body-bg); /* Added for dark mode */
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 /* App Layout */
@@ -34,6 +36,7 @@ body {
     left: 0;
     z-index: 1030;
     transition: all 0.3s;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .sidebar-header {
@@ -42,6 +45,7 @@ body {
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--bs-border-color);
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .logo {
@@ -56,6 +60,7 @@ body {
 
 .logo i {
     font-size: 1.5rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .sidebar-toggle {
@@ -70,11 +75,13 @@ body {
     flex: 1;
     overflow-y: auto;
     padding: 1.25rem 0;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .sidebar-footer {
     padding: 1rem 1.25rem;
     border-top: 1px solid var(--bs-border-color);
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .nav-list {
@@ -100,6 +107,7 @@ body {
 
 .nav-link:hover {
     background-color: var(--bs-secondary-bg-subtle);
+    color: var(--bs-primary); /* Added for dark mode */
 }
 
 .nav-link.active {
@@ -110,11 +118,13 @@ body {
 
 .nav-link i {
     font-size: 1.25rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .nav-section {
     margin-top: 1.5rem;
     margin-bottom: 0.75rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .nav-section-header {
@@ -129,6 +139,7 @@ body {
 
 .theme-switcher {
     margin-bottom: 1rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .theme-toggle-btn {
@@ -169,6 +180,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .app-header {
@@ -178,21 +190,25 @@ body {
     justify-content: space-between;
     padding: 0 var(--content-padding);
     border-bottom: 1px solid var(--bs-border-color);
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .mobile-header {
     display: none;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .app-content {
     flex: 1;
     padding: var(--content-padding);
     overflow-y: auto;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .app-footer {
     padding: 1rem var(--content-padding);
     border-top: 1px solid var(--bs-border-color);
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .footer-content {
@@ -209,16 +225,19 @@ body {
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     margin-bottom: 1.5rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .card-header {
     padding: 1rem 1.25rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .stat-card {
     background-color: var(--bs-dark-bg-subtle);
     border-radius: var(--border-radius);
     padding: 1rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .stat-label {
@@ -230,30 +249,33 @@ body {
 .stat-value {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--bs-body-color); /* Added for light mode consistency */
+    color: var(--bs-body-color);
 }
 
 /* Tools Page */
 .page-header {
     margin-bottom: 2rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .page-title {
     font-size: 1.75rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--bs-body-color); /* Added for light mode consistency */
+    color: var(--bs-body-color);
 }
 
 .explanation-container,
 .visualization-container,
 .result-container {
     display: none;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 /* Spinner */
 .spinner-container {
     display: none;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 /* Result Display */
@@ -263,6 +285,7 @@ body {
     flex-wrap: wrap;
     gap: 0.5rem;
     margin-top: 0.5rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .token {
@@ -280,15 +303,7 @@ body {
 
 [data-bs-theme="dark"] .token {
     background-color: #3d4852;
-    color: #91a7ff;
-}
-
-[data-bs-theme="dark"] .token {
-    color: #6ea8fe;
-}
-
-[data-bs-theme="light"] .token {
-    color: #0d6efd;
+    color: #ffffff; /* Changed to white for dark mode */
 }
 
 .removed-tokens .token {
@@ -320,12 +335,14 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .lemma-item {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .lemma-original {
@@ -352,6 +369,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .pos-tag {
@@ -378,6 +396,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .pos-group,
@@ -385,6 +404,7 @@ body {
     background-color: var(--bs-light-bg-subtle);
     border-radius: var(--border-radius);
     padding: 0.75rem 1rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .pos-group-header,
@@ -392,13 +412,14 @@ body {
     font-weight: 600;
     margin-bottom: 0.5rem;
     font-size: 0.875rem;
-    color: var(--bs-body-color); /* Added for light mode consistency */
+    color: var(--bs-body-color);
 }
 
 .entity-display {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .entity-tag {
@@ -422,6 +443,7 @@ body {
 
 .sentiment-value {
     font-weight: 600;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .sentiment-value.Positive {
@@ -440,6 +462,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 1rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .score-item {
@@ -447,13 +470,14 @@ body {
     border-radius: var(--border-radius);
     padding: 0.75rem 1rem;
     text-align: center;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .score-label {
     font-weight: 600;
     margin-bottom: 0.25rem;
     font-size: 0.875rem;
-    color: var(--bs-body-color); /* Added for light mode consistency */
+    color: var(--bs-body-color);
 }
 
 .summary-display {
@@ -462,26 +486,27 @@ body {
     padding: 1rem;
     font-size: 0.9375rem;
     line-height: 1.6;
-    color: var(--bs-body-color); /* Added for light mode consistency */
-
+    color: var(--bs-body-color);
 }
 
 .keyword-display {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 0.75rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .keyword-item {
     background-color: var(--bs-light-bg-subtle);
     border-radius: var(--border-radius);
     padding: 0.75rem 1rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .keyword-word {
     font-weight: 600;
     margin-bottom: 0.25rem;
-    color: var(--bs-body-color); /* Added for light mode consistency */
+    color: var(--bs-body-color);
 }
 
 .keyword-score {
@@ -493,18 +518,20 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 0.75rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .probability-item {
     background-color: var(--bs-light-bg-subtle);
     border-radius: var(--border-radius);
     padding: 0.75rem 1rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .probability-lang {
     font-weight: 600;
     margin-bottom: 0.25rem;
-    color: var(--bs-body-color); /* Added for light mode consistency */
+    color: var(--bs-body-color);
 }
 
 .probability-value {
@@ -516,14 +543,14 @@ body {
 .explanation-content {
     font-size: 0.9375rem;
     line-height: 1.6;
-    color: var(--bs-body-color); /* Added for light mode consistency */
+    color: var(--bs-body-color);
 }
 
 .explanation-title {
     font-size: 1.125rem;
     font-weight: 600;
     margin-bottom: 0.75rem;
-    color: var(--bs-body-color); /* Added for light mode consistency */
+    color: var(--bs-body-color);
 }
 
 /* NLP Basics Page */
@@ -537,6 +564,7 @@ body {
 
 .generated-content .content-header {
     margin-bottom: 1.5rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .generated-content .content-body > div {
@@ -545,6 +573,7 @@ body {
     background: var(--bs-body-bg);
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .generated-content h2 {
@@ -556,11 +585,13 @@ body {
 .generated-content h3 {
     font-size: 1.25rem;
     margin-bottom: 0.75rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .generated-content ul, .generated-content ol {
     padding-left: 1.5rem;
     margin-bottom: 1rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .generated-content code {
@@ -576,6 +607,7 @@ body {
     border-radius: 8px;
     overflow-x: auto;
     margin: 1rem 0;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .generated-content h1,
@@ -603,6 +635,7 @@ body {
 .generated-content p {
     margin-bottom: 1rem;
     line-height: 1.6;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .generated-content pre {
@@ -630,12 +663,14 @@ body {
     width: 100%;
     margin-bottom: 1rem;
     border-collapse: collapse;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .generated-content th,
 .generated-content td {
     padding: 0.5rem;
     border: 1px solid var(--bs-border-color);
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .generated-content th {
@@ -646,6 +681,7 @@ body {
 .error-page {
     max-width: 600px;
     margin: 0 auto;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .error-code {
@@ -660,7 +696,7 @@ body {
 .error-title {
     font-size: 2rem;
     font-weight: 600;
-    color: var(--bs-body-color); /* Added for light mode consistency */
+    color: var(--bs-body-color);
 }
 
 .error-message {
@@ -675,6 +711,7 @@ body {
     flex-direction: column;
     max-height: 800px;
     min-height: 400px;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .chat-messages {
@@ -711,18 +748,19 @@ body {
 
 .user-message .message-sender,
 .user-message .message-body {
-    color: #004080; /* Darker blue for user messages */
+    color: #004080;
 }
 
 [data-bs-theme="dark"] .user-message .message-sender,
 [data-bs-theme="dark"] .user-message .message-body {
-    color: #6ea8fe; /* Lighter blue for user messages in dark mode */
+    color: #6ea8fe;
 }
 
 .chat-options-panel {
     overflow-y: auto;
     max-height: calc(100vh - 350px);
     padding-right: 10px;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .chat-messages::-webkit-scrollbar {
@@ -742,6 +780,7 @@ body {
     margin-bottom: 1.5rem;
     display: flex;
     flex-direction: column;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .message-wrapper.user-message {
@@ -752,6 +791,7 @@ body {
     max-width: 85%;
     border-radius: var(--border-radius);
     overflow: hidden;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .user-message .message-content {
@@ -769,6 +809,7 @@ body {
 .message-header {
     padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--bs-border-color);
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .user-message .message-header {
@@ -785,6 +826,7 @@ body {
     border-radius: 50%;
     margin-right: 0.75rem;
     font-size: 0.875rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .user-message .message-avatar {
@@ -806,23 +848,27 @@ body {
 .chat-input-container {
     border-top: 1px solid var(--bs-border-color);
     padding: 1rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .chat-input {
     resize: none;
     overflow: hidden;
     max-height: 100px;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .code-textarea {
     font-family: monospace;
     font-size: 0.875rem;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .code-block {
     background-color: var(--bs-dark-bg-subtle);
     border-radius: var(--border-radius);
     overflow: hidden;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .code-header {
@@ -832,15 +878,18 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .code-content {
     padding: 1rem;
     overflow-x: auto;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 pre {
     margin-bottom: 0;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 .thinking-message {
@@ -884,6 +933,7 @@ pre {
 .example-question-btn {
     font-size: 0.75rem;
     white-space: nowrap;
+    color: var(--bs-body-color); /* Added for dark mode */
 }
 
 /* Mobile Responsive Styles */
@@ -896,6 +946,7 @@ pre {
         transform: translateX(-100%);
         box-shadow: none;
         z-index: 1040;
+        color: var(--bs-body-color); /* Added for dark mode */
     }
 
     .app-sidebar.open {
@@ -911,11 +962,13 @@ pre {
         display: flex;
         align-items: center;
         gap: 1rem;
+        color: var(--bs-body-color); /* Added for dark mode */
     }
 
     .mobile-logo {
         font-weight: 600;
         font-size: 1.25rem;
+        color: var(--bs-body-color); /* Added for dark mode */
     }
 
     .sidebar-open {
@@ -953,7 +1006,7 @@ pre {
 [data-bs-theme="light"] *,
 [data-bs-theme="light"] ::before,
 [data-bs-theme="light"] ::after {
-  color: #000000; /*Applies to all elements in light mode*/
+  color: #000000;
 }
 
 [data-bs-theme="light"] .nav-link:hover {
@@ -1029,4 +1082,25 @@ pre {
 #perf-chart, #custom-viz-chart {
     width: 100% !important;
     height: 100% !important;
+}
+
+[data-bs-theme="dark"] {
+  --bs-primary: var(--primary-color);
+  --bs-primary-rgb: 98, 69, 255;
+  --bs-body-bg: #000000;
+  --bs-body-color: #ffffff;
+  --bs-border-color: rgba(255, 255, 255, 0.1);
+  --bs-dark: #1a1a1a;
+  --bs-secondary: #888888;
+  --bs-secondary-bg-subtle: #2d2d2d;
+  --bs-primary-bg-subtle: #333333;
+  --bs-light-bg-subtle: #2d2d2d;
+  --bs-dark-bg-subtle: #3d4852;
+  --bs-primary-border-subtle: #444444;
+}
+
+[data-bs-theme="dark"] *,
+[data-bs-theme="dark"] ::before,
+[data-bs-theme="dark"] ::after {
+  color: #ffffff;
 }
