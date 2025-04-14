@@ -1003,3 +1003,15 @@ pre {
 .task-result .result-section-title {
     color: #ffffff;
 }
+
+#perf-chart, #custom-viz-chart, #visualization-container {
+    height: 300px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.chart-container {
+    height: 300px;
+    max-width: 800px;
+    margin: 0 auto;
+}
