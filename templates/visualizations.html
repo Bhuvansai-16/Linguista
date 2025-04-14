@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-12">
             <h1 class="mb-4">NLP Visualizations</h1>
-            
+
             <div class="card">
                 <div class="card-header">
                     <ul class="nav nav-tabs card-header-tabs" id="visualization-tabs">
@@ -30,7 +30,7 @@
                                 <i class="bi bi-info-circle me-2"></i>
                                 Compare performance metrics between NLTK and spaCy for various NLP tasks.
                             </div>
-                            
+
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <div class="form-group mb-3">
@@ -55,13 +55,13 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <button class="btn btn-primary" id="run-performance-btn">
                                     <i class="bi bi-bar-chart"></i> Run Performance Comparison
                                 </button>
                             </div>
-                            
+
                             <div id="perf-results" style="display: none;">
                                 <div id="perf-loading" class="text-center my-4">
                                     <div class="spinner-border text-primary" role="status">
@@ -69,10 +69,10 @@
                                     </div>
                                     <p class="mt-2">Running comparison...</p>
                                 </div>
-                                
+
                                 <div id="perf-chart-container" style="display: none;">
                                     <h4 class="mb-3">Performance Results</h4>
-                                    
+
                                     <div class="row">
                                         <div class="col-md-8">
                                             <div id="perf-chart" style="height: 400px;"></div>
@@ -88,7 +88,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="mt-4">
                                         <h5>Detailed Results</h5>
                                         <table class="table table-bordered">
@@ -108,14 +108,14 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Feature Comparison Tab -->
                         <div class="tab-pane fade" id="features">
                             <div class="alert alert-info mb-4">
                                 <i class="bi bi-info-circle me-2"></i>
                                 Compare feature sets and capabilities between NLTK and spaCy.
                             </div>
-                            
+
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <div class="card h-100">
@@ -159,7 +159,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-6">
                                     <div class="card h-100">
                                         <div class="card-header bg-success text-white">
@@ -203,7 +203,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="card mt-4">
                                 <div class="card-header">
                                     <h5 class="card-title mb-0">Feature Availability Comparison</h5>
@@ -285,14 +285,14 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Custom Visualization Tab -->
                         <div class="tab-pane fade" id="custom">
                             <div class="alert alert-info mb-4">
                                 <i class="bi bi-info-circle me-2"></i>
                                 Generate custom visualizations for comparing NLTK and spaCy on specific texts.
                             </div>
-                            
+
                             <div class="form-group mb-3">
                                 <label for="custom-viz-task">NLP Task:</label>
                                 <select class="form-select" id="custom-viz-task">
@@ -301,25 +301,25 @@
                                     <option value="text_similarity">Text Similarity</option>
                                 </select>
                             </div>
-                            
+
                             <div class="form-group mb-3">
                                 <label for="custom-viz-text">Text to Analyze:</label>
                                 <textarea class="form-control" id="custom-viz-text" rows="5" placeholder="Enter text to analyze..."></textarea>
                             </div>
-                            
+
                             <div id="similarity-text-container" style="display: none;">
                                 <div class="form-group mb-3">
                                     <label for="custom-viz-comparison-text">Comparison Text:</label>
                                     <textarea class="form-control" id="custom-viz-comparison-text" rows="5" placeholder="Enter text to compare with..."></textarea>
                                 </div>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <button class="btn btn-primary" id="generate-viz-btn">
                                     <i class="bi bi-graph-up"></i> Generate Visualization
                                 </button>
                             </div>
-                            
+
                             <div id="custom-viz-results" style="display: none;">
                                 <div id="custom-viz-loading" class="text-center my-4">
                                     <div class="spinner-border text-primary" role="status">
@@ -327,18 +327,21 @@
                                     </div>
                                     <p class="mt-2">Generating visualization...</p>
                                 </div>
-                                
+                                <div id="visualization-container" class="mt-4">
+                                    <canvas id="chart-canvas"></canvas>
+                                </div>
+
                                 <div id="custom-viz-container" class="row" style="display: none;">
                                     <div class="col-md-12">
                                         <h4 class="mb-3">Visualization Results</h4>
-                                        
+
                                         <div class="card">
                                             <div class="card-body">
                                                 <div id="custom-viz-chart" style="height: 400px;"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-md-12 mt-4">
                                         <div class="card">
                                             <div class="card-header">
@@ -382,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const perfChartContainer = document.getElementById('perf-chart-container');
     const perfAnalysis = document.getElementById('perf-analysis');
     const perfDetails = document.getElementById('perf-details');
-    
+
     // Custom Visualization Tab
     const customVizTask = document.getElementById('custom-viz-task');
     const customVizText = document.getElementById('custom-viz-text');
@@ -394,11 +397,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const customVizContainer = document.getElementById('custom-viz-container');
     const nltkResults = document.getElementById('nltk-results');
     const spacyResults = document.getElementById('spacy-results');
-    
+    const chartCanvas = document.getElementById('chart-canvas'); // Added canvas element
+
     // Chart objects
     let perfChart = null;
     let customVizChart = null;
-    
+
     // Set up event listeners
     if (customVizTask) {
         customVizTask.addEventListener('change', function() {
@@ -409,42 +413,42 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     if (runPerformanceBtn) {
         runPerformanceBtn.addEventListener('click', runPerformanceComparison);
     }
-    
+
     if (generateVizBtn) {
         generateVizBtn.addEventListener('click', generateCustomVisualization);
     }
-    
+
     // Performance comparison function
     function runPerformanceComparison() {
         const task = perfTask.value;
         const textSize = perfTextSize.value;
-        
+
         // Show loading state
         perfResults.style.display = 'block';
         perfLoading.style.display = 'block';
         perfChartContainer.style.display = 'none';
-        
+
         // In a real implementation, you would make an API call to run the benchmarks
         // For this example, we'll use mock data with a delay to simulate processing
         setTimeout(function() {
             // Simulate benchmark data - in a real app this would come from your backend
             const data = simulatePerformanceData(task, textSize);
-            
+
             // Update the UI with results
             displayPerformanceResults(data);
         }, 1500);
     }
-    
+
     // Custom visualization function
     function generateCustomVisualization() {
         const task = customVizTask.value;
         const text = customVizText.value.trim();
         let comparisonText = '';
-        
+
         if (task === 'text_similarity') {
             comparisonText = customVizComparisonText.value.trim();
             if (!comparisonText) {
@@ -452,17 +456,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
         }
-        
+
         if (!text) {
             alert('Please enter text to analyze');
             return;
         }
-        
+
         // Show loading state
         customVizResults.style.display = 'block';
         customVizLoading.style.display = 'block';
         customVizContainer.style.display = 'none';
-        
+
         // Call the API to process text with both NLTK and spaCy
         fetch('/api/process', {
             method: 'POST',
@@ -504,44 +508,44 @@ document.addEventListener('DOMContentLoaded', function() {
             spacyResults.innerHTML = '';
         });
     }
-    
+
     // Function to display performance comparison results
     function displayPerformanceResults(data) {
         perfLoading.style.display = 'none';
         perfChartContainer.style.display = 'block';
-        
+
         // Update analysis section
         perfAnalysis.innerHTML = data.analysis;
-        
+
         // Update details table
         perfDetails.innerHTML = '';
         for (const metric of data.metrics) {
             const row = document.createElement('tr');
-            
+
             const nltkValue = metric.nltk;
             const spacyValue = metric.spacy;
             const diff = spacyValue - nltkValue;
             const diffClass = diff < 0 ? 'text-success' : (diff > 0 ? 'text-danger' : '');
             const diffPrefix = diff < 0 ? '-' : (diff > 0 ? '+' : '');
             const diffText = diff !== 0 ? `${diffPrefix}${Math.abs(diff).toFixed(2)}` : '0.00';
-            
+
             row.innerHTML = `
                 <td>${metric.name}</td>
                 <td>${nltkValue.toFixed(2)}</td>
                 <td>${spacyValue.toFixed(2)}</td>
                 <td class="${diffClass}">${diffText}</td>
             `;
-            
+
             perfDetails.appendChild(row);
         }
-        
+
         // Create or update the chart
         const ctx = document.getElementById('perf-chart');
         if (ctx) {
             if (perfChart) {
                 perfChart.destroy();
             }
-            
+
             perfChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -579,12 +583,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
-    
+
     // Function to display custom visualization results
     function displayCustomVisualization(task, nltkData, spacyData) {
         customVizLoading.style.display = 'none';
         customVizContainer.style.display = 'block';
-        
+
         // Display NLTK results
         if (nltkData.success) {
             const nltkResult = nltkData.result;
@@ -593,7 +597,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             nltkResults.innerHTML = `<div class="alert alert-danger">Error: ${nltkData.error}</div>`;
         }
-        
+
         // Display spaCy results
         if (spacyData.success) {
             const spacyResult = spacyData.result;
@@ -602,14 +606,14 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             spacyResults.innerHTML = `<div class="alert alert-danger">Error: ${spacyData.error}</div>`;
         }
-        
+
         // Create visualization based on task type
-        const ctx = document.getElementById('custom-viz-chart');
+        const ctx = chartCanvas.getContext('2d'); // Use the added canvas element
         if (ctx) {
             if (customVizChart) {
                 customVizChart.destroy();
             }
-            
+
             if (task === 'sentiment_analysis' && nltkData.success && spacyData.success) {
                 createSentimentChart(ctx, nltkData, spacyData);
             } else if (task === 'keyword_extraction' && nltkData.success && spacyData.success) {
@@ -619,7 +623,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-    
+
     // Helper function to format results based on task
     function formatResults(task, result) {
         if (task === 'sentiment_analysis') {
@@ -634,7 +638,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const keywords = result.keywords.slice(0, 10).map((kw, i) => 
                 `<li>${kw.word} (${kw.score.toFixed(3)})</li>`
             ).join('');
-            
+
             return `
                 <p><strong>Top Keywords:</strong></p>
                 <ol>${keywords}</ol>
@@ -648,12 +652,12 @@ document.addEventListener('DOMContentLoaded', function() {
             return `<pre>${JSON.stringify(result, null, 2)}</pre>`;
         }
     }
-    
+
     // Chart creation functions
     function createSentimentChart(ctx, nltkData, spacyData) {
         const nltk = nltkData.result;
         const spacy = spacyData.result;
-        
+
         customVizChart = new Chart(ctx, {
             type: 'radar',
             data: {
@@ -700,20 +704,20 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     function createKeywordChart(ctx, nltkData, spacyData) {
         const nltkKeywords = nltkData.result.keywords.slice(0, 5).map(kw => kw.word);
         const nltkScores = nltkData.result.keywords.slice(0, 5).map(kw => kw.score);
-        
+
         const spacyKeywords = spacyData.result.keywords.slice(0, 5).map(kw => kw.word);
         const spacyScores = spacyData.result.keywords.slice(0, 5).map(kw => kw.score);
-        
+
         // Normalize scores for better comparison
         const maxNltkScore = Math.max(...nltkScores);
         const maxSpacyScore = Math.max(...spacyScores);
         const normalizedNltkScores = nltkScores.map(score => score / maxNltkScore);
         const normalizedSpacyScores = spacyScores.map(score => score / maxSpacyScore);
-        
+
         customVizChart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -767,11 +771,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     function createSimilarityChart(ctx, nltkData, spacyData) {
         const nltkScore = nltkData.result.similarity_score;
         const spacyScore = spacyData.result.similarity_score;
-        
+
         customVizChart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -810,7 +814,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Simulation function for performance data
     function simulatePerformanceData(task, textSize) {
         // These are simulated values - in a real app, you'd get actual benchmarks
@@ -821,31 +825,31 @@ document.addEventListener('DOMContentLoaded', function() {
             'lemmatization': { nltk: 1.2, spacy: 0.6 },
             'stopword_removal': { nltk: 0.8, spacy: 0.4 }
         };
-        
+
         const sizeMultipliers = {
             'small': 1,
             'medium': 2.5,
             'large': 6
         };
-        
+
         const baseTime = 100; // milliseconds
         const taskMultiplier = taskMultipliers[task] || { nltk: 1.0, spacy: 0.5 };
         const sizeMultiplier = sizeMultipliers[textSize] || 1;
-        
+
         // Add some randomness
         const randomFactor = () => 0.8 + Math.random() * 0.4;
-        
+
         const nltkTime = baseTime * taskMultiplier.nltk * sizeMultiplier * randomFactor();
         const spacyTime = baseTime * taskMultiplier.spacy * sizeMultiplier * randomFactor();
-        
+
         // Memory usage also varies by library and task
         const nltkMemory = (25 + Math.random() * 10) * sizeMultiplier;
         const spacyMemory = (60 + Math.random() * 20) * sizeMultiplier;
-        
+
         // Accuracy is typically similar but can vary
         const nltkAccuracy = 0.82 + Math.random() * 0.1;
         const spacyAccuracy = 0.85 + Math.random() * 0.1;
-        
+
         // Generate analysis text
         let analysis = '';
         if (nltkTime < spacyTime) {
@@ -853,15 +857,15 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             analysis += '<p>spaCy was faster for this task due to its optimized C implementation.</p>';
         }
-        
+
         analysis += `<p>For ${task.replace('_', ' ')}, spaCy ${spacyAccuracy > nltkAccuracy ? 'typically achieves higher accuracy' : 'and NLTK have similar accuracy'}.</p>`;
-        
+
         if (task === 'ner' || task === 'pos_tagging') {
             analysis += '<p>spaCy\'s models are pre-trained on large datasets, which can provide better results for complex texts.</p>';
         }
-        
+
         analysis += `<p>For ${textSize} texts, ${nltkMemory < spacyMemory ? 'NLTK uses less memory and may be preferred for resource-constrained environments.' : 'both libraries perform well, with spaCy being more efficient for processing speed.'}</p>`;
-        
+
         return {
             task: task.replace('_', ' '),
             textSize: textSize,
