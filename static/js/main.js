@@ -444,37 +444,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Create visualization based on task
     function createVisualization(data, task) {
-        // Ensure the canvas is visible
+        // Ensure the canvas is visible and properly sized
         const chartContainer = document.getElementById('visualization-container');
         const chartCanvas = document.getElementById('chart-canvas');
-        
+
         if (chartContainer && chartCanvas) {
             chartContainer.style.display = 'block';
             chartCanvas.style.height = '400px';
             chartCanvas.style.width = '100%';
-            
+
+
             // Destroy previous chart if exists
-            if (chart) {
-                chart.destroy();
+            if (window.currentChart) {
+                window.currentChart.destroy();
             }
+
+            const ctx = chartCanvas.getContext('2d');
+            ctx.clearRect(0, 0, chartCanvas.width, chartCanvas.height);
+
 
             // Create chart based on task
             if (task === 'sentiment_analysis') {
-                createSentimentChart(data);
+                window.currentChart = createSentimentChart(data, ctx);
             } else if (task === 'keyword_extraction') {
-                createKeywordChart(data);
+                window.currentChart = createKeywordChart(data, ctx);
             } else if (task === 'text_similarity') {
-                createSimilarityChart(data);
+                window.currentChart = createSimilarityChart(data, ctx);
             }
         }
     }
 
     // Add similarity chart creation function
-    function createSimilarityChart(data) {
-        const ctx = chartCanvas.getContext('2d');
+    function createSimilarityChart(data, ctx) {
         const similarity = parseFloat(data.similarity_score || 0);
 
-        chart = new Chart(ctx, {
+        return new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ['Text Similarity'],
@@ -520,10 +524,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Create sentiment analysis chart
-    function createSentimentChart(data) {
-        const ctx = chartCanvas.getContext('2d');
-
-        chart = new Chart(ctx, {
+    function createSentimentChart(data, ctx) {
+        return new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: data.map(item => item.name),
@@ -569,16 +571,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Create keyword extraction chart
-    function createKeywordChart(data) {
-        const ctx = chartCanvas.getContext('2d');
-
+    function createKeywordChart(data, ctx) {
         // Sort data by value in descending order
         const sortedData = [...(data || [])].sort((a, b) => b.value - a.value);
 
         // Take only top 10 keywords
         const topData = sortedData.slice(0, 10);
 
-        chart = new Chart(ctx, {
+        return new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: topData.map(item => item.name),
@@ -603,7 +603,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Helper function to get nested object value by path
     function getNestedValue(obj, path) {
-        return path.split('.').reduce((prev, curr) => 
+        return path.split('.').reduce((prev, curr) =>
             prev && prev[curr] !== undefined ? prev[curr] : undefined, obj);
     }
 
