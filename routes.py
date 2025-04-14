@@ -48,11 +48,16 @@ def visualizations():
     """Render the visualizations page."""
     return render_template('visualizations.html')
 
+from functools import lru_cache
+
 @routes.route('/api/process', methods=['POST'])
 def process():
     """Process NLP tasks based on user input."""
     try:
-        # Get request data
+        # Get request data with proper content-type validation
+        if not request.is_json:
+            return jsonify({'error': 'Content-Type must be application/json'}), 400
+            
         data = request.get_json()
         if not data:
             return jsonify({'error': 'Invalid request data'}), 400
