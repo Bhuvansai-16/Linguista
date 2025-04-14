@@ -28,6 +28,23 @@ def chat():
     """Render the chat page with AI assistant."""
     return render_template('chat.html')
 
+@routes.route('/nlp-basics')
+def nlp_basics():
+    """Render the NLP basics learning page."""
+    return render_template('nlp_basics.html')
+
+@routes.route('/code-examples')
+def code_examples():
+    """Render the code examples page."""
+    # Placeholder for future implementation
+    return render_template('errors/404.html')
+
+@routes.route('/visualizations')
+def visualizations():
+    """Render the visualizations page."""
+    # Placeholder for future implementation
+    return render_template('errors/404.html')
+
 @routes.route('/api/process', methods=['POST'])
 def process():
     """Process NLP tasks based on user input."""

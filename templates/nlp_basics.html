@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+
+{% block header_actions %}
+<div class="d-flex align-items-center gap-2">
+    <a href="/" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-tools me-1"></i> NLP Tools
+    </a>
+    <a href="/chat" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-chat-square-text me-1"></i> AI Assistant
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="nlp-basics-page">
+    <div class="page-header mb-4">
+        <h1 class="page-title">NLP Basics</h1>
+        <p class="text-muted">Learn about the fundamental concepts and techniques in Natural Language Processing</p>
+    </div>
+    
+    <div class="row g-4">
+        <!-- Resources Column -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom">
+                    <h2 class="fs-5 mb-0"><i class="bi bi-journal-text me-2"></i>Learning Resources</h2>
+                </div>
+                <div class="card-body">
+                    <div class="resource-list">
+                        <div class="resource-item mb-4">
+                            <h3 class="resource-title fs-5 mb-2">Online Courses</h3>
+                            <div class="list-group">
+                                <a href="https://www.deeplearning.ai/resources/natural-language-processing/" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                    <div>
+                                        <strong>DeepLearning.AI NLP Specialization</strong>
+                                        <div class="small text-muted">Build and train neural networks for NLP tasks</div>
+                                    </div>
+                                </a>
+                                <a href="https://www.coursera.org/courses?query=nlp" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                    <div>
+                                        <strong>Coursera NLP Courses</strong>
+                                        <div class="small text-muted">Wide range of courses from beginner to advanced</div>
+                                    </div>
+                                </a>
+                                <a href="https://www.tensorflow.org/text/tutorials" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                    <div>
+                                        <strong>TensorFlow Text Tutorials</strong>
+                                        <div class="small text-muted">Hands-on tutorials for text processing with TensorFlow</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="resource-item mb-4">
+                            <h3 class="resource-title fs-5 mb-2">Documentation & Guides</h3>
+                            <div class="list-group">
+                                <a href="https://www.nltk.org/" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                    <div>
+                                        <strong>NLTK Documentation</strong>
+                                        <div class="small text-muted">Complete guide to the Natural Language Toolkit</div>
+                                    </div>
+                                </a>
+                                <a href="https://spacy.io/usage" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                    <div>
+                                        <strong>spaCy Usage Guides</strong>
+                                        <div class="small text-muted">Industrial-strength NLP library documentation</div>
+                                    </div>
+                                </a>
+                                <a href="https://huggingface.co/docs" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                    <div>
+                                        <strong>Hugging Face Documentation</strong>
+                                        <div class="small text-muted">State-of-the-art NLP models and libraries</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="resource-item">
+                            <h3 class="resource-title fs-5 mb-2">Books & Publications</h3>
+                            <div class="list-group">
+                                <a href="https://web.stanford.edu/~jurafsky/slp3/" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                    <div>
+                                        <strong>Speech and Language Processing</strong>
+                                        <div class="small text-muted">Comprehensive textbook by Jurafsky & Martin</div>
+                                    </div>
+                                </a>
+                                <a href="https://www.amazon.com/Natural-Language-Processing-Python-Analyzing/dp/0596516495" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                    <div>
+                                        <strong>Natural Language Processing with Python</strong>
+                                        <div class="small text-muted">Practical introduction to NLP using NLTK</div>
+                                    </div>
+                                </a>
+                                <a href="https://d2l.ai/chapter_natural-language-processing-pretraining/index.html" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                    <div>
+                                        <strong>Dive into Deep Learning</strong>
+                                        <div class="small text-muted">Interactive book on deep learning for NLP</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- AI Learning Column -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom">
+                    <h2 class="fs-5 mb-0"><i class="bi bi-robot me-2"></i>AI-Powered Learning</h2>
+                </div>
+                <div class="card-body">
+                    <div class="ai-learning-container">
+                        <p class="mb-3">Generate personalized NLP learning content with AI assistance. Choose a topic to learn about:</p>
+                        
+                        <div class="topic-selector mb-4">
+                            <select class="form-select mb-3" id="topic-select">
+                                <option value="">-- Select a topic --</option>
+                                <option value="tokenization">Tokenization</option>
+                                <option value="word-embeddings">Word Embeddings</option>
+                                <option value="transformers">Transformer Models</option>
+                                <option value="text-classification">Text Classification</option>
+                                <option value="named-entity-recognition">Named Entity Recognition</option>
+                                <option value="sentiment-analysis">Sentiment Analysis</option>
+                                <option value="language-modeling">Language Modeling</option>
+                                <option value="machine-translation">Machine Translation</option>
+                            </select>
+                            
+                            <div class="level-selector mb-3">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="learning-level" id="beginner-level" value="beginner" checked>
+                                    <label class="form-check-label" for="beginner-level">Beginner</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="learning-level" id="intermediate-level" value="intermediate">
+                                    <label class="form-check-label" for="intermediate-level">Intermediate</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="learning-level" id="advanced-level" value="advanced">
+                                    <label class="form-check-label" for="advanced-level">Advanced</label>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-primary w-100" id="generate-content-btn">
+                                <i class="bi bi-lightning-charge me-1"></i> Generate Learning Content
+                            </button>
+                        </div>
+                        
+                        <div class="custom-topic mb-4">
+                            <h3 class="fs-6 mb-2">Or specify your own topic:</h3>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="custom-topic-input" placeholder="e.g., Text summarization techniques">
+                                <button class="btn btn-primary" type="button" id="custom-topic-btn">
+                                    <i class="bi bi-lightning-charge"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="learning-content-container mt-4" id="learning-content" style="display: none;">
+                            <div class="content-loading text-center mb-4" id="content-loading">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Generating learning content...</p>
+                            </div>
+                            
+                            <div class="generated-content" id="generated-content" style="display: none;">
+                                <!-- Content will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const generateContentBtn = document.getElementById('generate-content-btn');
+    const customTopicBtn = document.getElementById('custom-topic-btn');
+    const topicSelect = document.getElementById('topic-select');
+    const customTopicInput = document.getElementById('custom-topic-input');
+    const learningContent = document.getElementById('learning-content');
+    const contentLoading = document.getElementById('content-loading');
+    const generatedContent = document.getElementById('generated-content');
+    
+    function getSelectedLevel() {
+        const levelRadios = document.getElementsByName('learning-level');
+        for (const radio of levelRadios) {
+            if (radio.checked) {
+                return radio.value;
+            }
+        }
+        return 'beginner';
+    }
+    
+    function generateContent(topic, level = 'beginner') {
+        if (!topic) {
+            alert('Please select or enter a topic');
+            return;
+        }
+        
+        // Show loading state
+        learningContent.style.display = 'block';
+        contentLoading.style.display = 'block';
+        generatedContent.style.display = 'none';
+        
+        // Mock API call - replace with actual Gemini API call
+        fetch('/api/generate-learning-content', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                topic: topic,
+                level: level
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            contentLoading.style.display = 'none';
+            generatedContent.style.display = 'block';
+            generatedContent.innerHTML = data.content;
+            
+            // Scroll to the generated content
+            generatedContent.scrollIntoView({ behavior: 'smooth' });
+        })
+        .catch(error => {
+            contentLoading.style.display = 'none';
+            generatedContent.style.display = 'block';
+            generatedContent.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    There was an error generating content. Please try again or select a different topic.
+                </div>
+            `;
+            console.error('Error generating content:', error);
+        });
+    }
+    
+    generateContentBtn.addEventListener('click', function() {
+        const selectedTopic = topicSelect.value;
+        const level = getSelectedLevel();
+        generateContent(selectedTopic, level);
+    });
+    
+    customTopicBtn.addEventListener('click', function() {
+        const customTopic = customTopicInput.value.trim();
+        const level = getSelectedLevel();
+        generateContent(customTopic, level);
+    });
+    
+    customTopicInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const customTopic = customTopicInput.value.trim();
+            const level = getSelectedLevel();
+            generateContent(customTopic, level);
+        }
+    });
+});
+</script>
+{% endblock %}

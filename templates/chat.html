@@ -32,12 +32,6 @@
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code-panel" 
-                                        type="button" role="tab" aria-controls="code-panel" aria-selected="false">
-                                    <i class="bi bi-code-square me-1"></i> Code
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="compare-tab" data-bs-toggle="tab" data-bs-target="#compare-panel" 
                                         type="button" role="tab" aria-controls="compare-panel" aria-selected="false">
                                     <i class="bi bi-arrow-left-right me-1"></i> Compare
@@ -48,52 +42,31 @@
                         <div class="tab-content pt-3">
                             <!-- General Chat Options -->
                             <div class="tab-pane fade show active" id="general-panel" role="tabpanel" aria-labelledby="general-tab">
-                                <p class="text-muted mb-3">Ask questions about NLP concepts, techniques, or applications.</p>
+                                <p class="text-dark mb-3">Ask questions about NLP concepts, techniques, or applications.</p>
                                 
                                 <div class="example-questions">
-                                    <p class="mb-2 fw-semibold">Example questions:</p>
+                                    <p class="mb-2 fw-semibold text-dark">Example questions:</p>
                                     <div class="example-chips d-flex flex-wrap gap-2 mb-3">
-                                        <button class="btn btn-sm btn-outline-secondary example-question-btn">
+                                        <button class="btn btn-sm btn-outline-primary example-question-btn">
                                             What is tokenization?
                                         </button>
-                                        <button class="btn btn-sm btn-outline-secondary example-question-btn">
+                                        <button class="btn btn-sm btn-outline-primary example-question-btn">
                                             Explain word embeddings
                                         </button>
-                                        <button class="btn btn-sm btn-outline-secondary example-question-btn">
+                                        <button class="btn btn-sm btn-outline-primary example-question-btn">
                                             When should I use BERT?
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- Code Explanation Options -->
-                            <div class="tab-pane fade" id="code-panel" role="tabpanel" aria-labelledby="code-tab">
-                                <p class="text-muted mb-3">Get explanations of NLP code snippets.</p>
-                                
-                                <div class="code-sample-selector mb-3">
-                                    <label for="code-sample-select" class="form-label fw-semibold">Code Sample</label>
-                                    <select class="form-select mb-2" id="code-sample-select">
-                                        <option value="">-- Select a sample or enter your own --</option>
-                                        <option value="nltk-tokenize">NLTK Tokenization</option>
-                                        <option value="spacy-ner">spaCy Named Entity Recognition</option>
-                                        <option value="sklearn-vectorizer">scikit-learn Vectorization</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="code-input mb-3">
-                                    <label for="code-textarea" class="form-label fw-semibold">Code to Explain</label>
-                                    <textarea class="form-control code-textarea" id="code-textarea" rows="8" 
-                                              placeholder="Paste NLP code here for explanation..."></textarea>
-                                </div>
-                            </div>
-                            
                             <!-- Library Comparison Options -->
                             <div class="tab-pane fade" id="compare-panel" role="tabpanel" aria-labelledby="compare-tab">
-                                <p class="text-muted mb-3">Compare implementations across different NLP libraries.</p>
+                                <p class="text-dark mb-3">Compare implementations across different NLP libraries.</p>
                                 
                                 <div class="library-comparison-form">
                                     <div class="form-group mb-3">
-                                        <label for="source-library" class="form-label fw-semibold">Source Library</label>
+                                        <label for="source-library" class="form-label fw-semibold text-dark">Source Library</label>
                                         <select class="form-select" id="source-library">
                                             <option value="nltk">NLTK</option>
                                             <option value="spacy">spaCy</option>
@@ -102,7 +75,7 @@
                                     </div>
                                     
                                     <div class="form-group mb-3">
-                                        <label for="target-library" class="form-label fw-semibold">Target Library</label>
+                                        <label for="target-library" class="form-label fw-semibold text-dark">Target Library</label>
                                         <select class="form-select" id="target-library">
                                             <option value="spacy">spaCy</option>
                                             <option value="nltk">NLTK</option>
@@ -112,13 +85,13 @@
                                     
                                     <div class="form-check mb-3">
                                         <input class="form-check-input" type="checkbox" value="" id="include-performance" checked>
-                                        <label class="form-check-label" for="include-performance">
+                                        <label class="form-check-label text-dark" for="include-performance">
                                             Include performance comparison
                                         </label>
                                     </div>
                                     
                                     <div class="code-input mb-3">
-                                        <label for="compare-textarea" class="form-label fw-semibold">Code to Convert</label>
+                                        <label for="compare-textarea" class="form-label fw-semibold text-dark">Code to Convert</label>
                                         <textarea class="form-control code-textarea" id="compare-textarea" rows="8" 
                                                   placeholder="Paste code from source library here..."></textarea>
                                     </div>
