@@ -19,23 +19,16 @@ document.addEventListener('DOMContentLoaded', function() {
         sampleTextBtn: document.getElementById('sample-text-btn')
     };
 
-    // Initialize visualization elements with proper error handling
-    function initializeVisualization() {
-        const visualizationContainer = document.getElementById('visualization-container');
-        if (!visualizationContainer) return null;
-
+    // Initialize visualization elements
+    const visualizationContainer = document.getElementById('visualization-container');
+    if (visualizationContainer) {
         let chartCanvas = document.getElementById('chart-canvas');
         if (!chartCanvas) {
             chartCanvas = document.createElement('canvas');
             chartCanvas.id = 'chart-canvas';
-            chartCanvas.style.width = '100%';
-            chartCanvas.style.height = '400px';
             visualizationContainer.appendChild(chartCanvas);
         }
-        return chartCanvas;
     }
-
-    const chartCanvas = initializeVisualization();
 
     // Chart instance
     let chart;

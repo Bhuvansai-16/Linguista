@@ -17,7 +17,9 @@
                         <li class="nav-item">
                             <a class="nav-link" id="features-tab" data-bs-toggle="tab" href="#features">Feature Comparison</a>
                         </li>
-                        
+                        <li class="nav-item">
+                            <a class="nav-link" id="custom-tab" data-bs-toggle="tab" href="#custom">Custom Visualization</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="card-body">
@@ -284,7 +286,52 @@
                             </div>
                         </div>
 
-                        <div id="custom-viz-container" class="row" style="display: none;">
+                        <!-- Custom Visualization Tab -->
+                        <div class="tab-pane fade" id="custom">
+                            <div class="alert alert-info mb-4">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Generate custom visualizations for comparing NLTK and spaCy on specific texts.
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="custom-viz-task">NLP Task:</label>
+                                <select class="form-select" id="custom-viz-task">
+                                    <option value="sentiment_analysis" selected>Sentiment Analysis</option>
+                                    <option value="keyword_extraction">Keyword Extraction</option>
+                                    <option value="text_similarity">Text Similarity</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="custom-viz-text">Text to Analyze:</label>
+                                <textarea class="form-control" id="custom-viz-text" rows="5" placeholder="Enter text to analyze..."></textarea>
+                            </div>
+
+                            <div id="similarity-text-container" style="display: none;">
+                                <div class="form-group mb-3">
+                                    <label for="custom-viz-comparison-text">Comparison Text:</label>
+                                    <textarea class="form-control" id="custom-viz-comparison-text" rows="5" placeholder="Enter text to compare with..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <button class="btn btn-primary" id="generate-viz-btn">
+                                    <i class="bi bi-graph-up"></i> Generate Visualization
+                                </button>
+                            </div>
+
+                            <div id="custom-viz-results" style="display: none;">
+                                <div id="custom-viz-loading" class="text-center my-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-2">Generating visualization...</p>
+                                </div>
+                                <div id="visualization-container" class="mt-4" style="position: relative; height: 400px; width: 100%;">
+                                    <canvas id="chart-canvas" style="width: 100%; height: 100%;"></canvas>
+                                </div>
+
+                                <div id="custom-viz-container" class="row" style="display: none;">
                                     <div class="col-md-12">
                                         <h4 class="mb-3">Visualization Results</h4>
 

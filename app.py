@@ -1,24 +1,14 @@
 import os
 import logging
-import sys
 from flask import Flask
 from config import Config
 
-# Configure logging with proper handlers
+# Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler('app.log')
-    ]
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
-
-# Global error handler
-def handle_error(e):
-    logger.error(f"Application error: {str(e)}")
-    return "An error occurred", 500
 
 # Initialize NLTK resources
 from nltk_setup import initialize_nltk  # noqa: E402
