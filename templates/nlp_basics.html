@@ -17,7 +17,7 @@
         <h1 class="page-title">NLP Basics</h1>
         <p class="text-muted">Learn about the fundamental concepts and techniques in Natural Language Processing</p>
     </div>
-    
+
     <div class="row g-4">
         <!-- Resources Column -->
         <div class="col-lg-6">
@@ -53,7 +53,7 @@
                                 </a>
                             </div>
                         </div>
-                        
+
                         <div class="resource-item mb-4">
                             <h3 class="resource-title fs-5 mb-2">Documentation & Guides</h3>
                             <div class="list-group">
@@ -80,7 +80,7 @@
                                 </a>
                             </div>
                         </div>
-                        
+
                         <div class="resource-item">
                             <h3 class="resource-title fs-5 mb-2">Books & Publications</h3>
                             <div class="list-group">
@@ -111,7 +111,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- AI Learning Column -->
         <div class="col-lg-6">
             <div class="card border-0 shadow-sm mb-4">
@@ -121,7 +121,7 @@
                 <div class="card-body">
                     <div class="ai-learning-container">
                         <p class="mb-3">Generate personalized NLP learning content with AI assistance. Choose a topic to learn about:</p>
-                        
+
                         <div class="topic-selector mb-4">
                             <select class="form-select mb-3" id="topic-select">
                                 <option value="">-- Select a topic --</option>
@@ -134,7 +134,7 @@
                                 <option value="language-modeling">Language Modeling</option>
                                 <option value="machine-translation">Machine Translation</option>
                             </select>
-                            
+
                             <div class="level-selector mb-3">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="learning-level" id="beginner-level" value="beginner" checked>
@@ -149,12 +149,12 @@
                                     <label class="form-check-label" for="advanced-level">Advanced</label>
                                 </div>
                             </div>
-                            
+
                             <button class="btn btn-primary w-100" id="generate-content-btn">
                                 <i class="bi bi-lightning-charge me-1"></i> Generate Learning Content
                             </button>
                         </div>
-                        
+
                         <div class="custom-topic mb-4">
                             <h3 class="fs-6 mb-2">Or specify your own topic:</h3>
                             <div class="input-group mb-3">
@@ -164,7 +164,7 @@
                                 </button>
                             </div>
                         </div>
-                        
+
                         <div class="learning-content-container mt-4" id="learning-content" style="display: none;">
                             <div class="content-loading text-center mb-4" id="content-loading">
                                 <div class="spinner-border text-primary" role="status">
@@ -172,9 +172,17 @@
                                 </div>
                                 <p class="mt-2">Generating learning content...</p>
                             </div>
-                            
+
                             <div class="generated-content" id="generated-content" style="display: none;">
-                                <!-- Content will be inserted here -->
+                                <div class="content-header"></div>
+                                <div class="content-body">
+                                    <div class="introduction"></div>
+                                    <div class="key-concepts"></div>
+                                    <div class="how-it-works"></div>
+                                    <div class="examples"></div>
+                                    <div class="applications"></div>
+                                    <div class="further-learning"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -195,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const learningContent = document.getElementById('learning-content');
     const contentLoading = document.getElementById('content-loading');
     const generatedContent = document.getElementById('generated-content');
-    
+
     function getSelectedLevel() {
         const levelRadios = document.getElementsByName('learning-level');
         for (const radio of levelRadios) {
@@ -205,18 +213,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return 'beginner';
     }
-    
+
     function generateContent(topic, level = 'beginner') {
         if (!topic) {
             alert('Please select or enter a topic');
             return;
         }
-        
+
         // Show loading state
         learningContent.style.display = 'block';
         contentLoading.style.display = 'block';
         generatedContent.style.display = 'none';
-        
+
         // Mock API call - replace with actual Gemini API call
         fetch('/api/generate-learning-content', {
             method: 'POST',
@@ -233,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
             contentLoading.style.display = 'none';
             generatedContent.style.display = 'block';
             generatedContent.innerHTML = data.content;
-            
+
             // Scroll to the generated content
             generatedContent.scrollIntoView({ behavior: 'smooth' });
         })
@@ -249,19 +257,19 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error generating content:', error);
         });
     }
-    
+
     generateContentBtn.addEventListener('click', function() {
         const selectedTopic = topicSelect.value;
         const level = getSelectedLevel();
         generateContent(selectedTopic, level);
     });
-    
+
     customTopicBtn.addEventListener('click', function() {
         const customTopic = customTopicInput.value.trim();
         const level = getSelectedLevel();
         generateContent(customTopic, level);
     });
-    
+
     customTopicInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
