@@ -936,6 +936,20 @@ pre {
   --bs-border-color: rgba(0, 0, 0, 0.1);
 }
 
+[data-bs-theme="light"] .token,
+[data-bs-theme="light"] .message-sender,
+[data-bs-theme="light"] .message-body,
+[data-bs-theme="light"] .stat-value,
+[data-bs-theme="light"] .pos-word,
+[data-bs-theme="light"] .entity-text,
+[data-bs-theme="light"] .keyword-word,
+[data-bs-theme="light"] .probability-lang,
+[data-bs-theme="light"] .probability-value,
+[data-bs-theme="light"] .score-value,
+[data-bs-theme="light"] table td {
+  color: #000000;
+}
+
 [data-bs-theme="light"] *,
 [data-bs-theme="light"] ::before,
 [data-bs-theme="light"] ::after {

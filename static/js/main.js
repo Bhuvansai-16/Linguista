@@ -444,17 +444,79 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Create visualization based on task
     function createVisualization(data, task) {
-        // Destroy previous chart if exists
-        if (chart) {
-            chart.destroy();
-        }
+        // Ensure the canvas is visible
+        const chartContainer = document.getElementById('visualization-container');
+        const chartCanvas = document.getElementById('chart-canvas');
+        
+        if (chartContainer && chartCanvas) {
+            chartContainer.style.display = 'block';
+            chartCanvas.style.height = '400px';
+            chartCanvas.style.width = '100%';
+            
+            // Destroy previous chart if exists
+            if (chart) {
+                chart.destroy();
+            }
 
-        // Create chart based on task
-        if (task === 'sentiment_analysis') {
-            createSentimentChart(data);
-        } else if (task === 'keyword_extraction') {
-            createKeywordChart(data);
+            // Create chart based on task
+            if (task === 'sentiment_analysis') {
+                createSentimentChart(data);
+            } else if (task === 'keyword_extraction') {
+                createKeywordChart(data);
+            } else if (task === 'text_similarity') {
+                createSimilarityChart(data);
+            }
         }
+    }
+
+    // Add similarity chart creation function
+    function createSimilarityChart(data) {
+        const ctx = chartCanvas.getContext('2d');
+        const similarity = parseFloat(data.similarity_score || 0);
+
+        chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Text Similarity'],
+                datasets: [{
+                    label: 'Similarity Score',
+                    data: [similarity],
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1,
+                        ticks: {
+                            callback: function(value) {
+                                return (value * 100) + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Text Similarity Comparison',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Similarity: ' + (context.raw * 100).toFixed(2) + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     // Create sentiment analysis chart
