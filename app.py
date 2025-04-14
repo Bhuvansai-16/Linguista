@@ -1,6 +1,19 @@
 import os
+import logging
 from flask import Flask
 from config import Config
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Initialize NLTK resources
+from nltk_setup import initialize_nltk  # noqa: E402
+logger.info("Initializing NLTK resources...")
+initialize_nltk()
 
 # Create Flask app
 app = Flask(__name__)

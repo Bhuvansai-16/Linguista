@@ -4,7 +4,58 @@ import logging
 import string
 import numpy as np
 from collections import Counter
-from nltk.tokenize import word_tokenize, sent_tokenize
+
+# Set up logging
+logger = logging.getLogger(__name__)
+from nltk.tokenize import word_tokenize as nltk_word_tokenize
+from nltk.tokenize import sent_tokenize as nltk_sent_tokenize
+
+# Custom tokenize functions to handle punkt_tab errors
+def word_tokenize(text):
+    """Wrapper for NLTK's word_tokenize that handles potential punkt_tab errors"""
+    try:
+        return nltk_word_tokenize(text)
+    except Exception as e:
+        if 'punkt_tab' in str(e):
+            # Simple fallback: Split on whitespace and punctuation
+            logger.warning("punkt_tab error encountered, using fallback tokenizer")
+            words = []
+            # Split by spaces first
+            for word in text.split():
+                # Then handle punctuation
+                if word and word[-1] in string.punctuation:
+                    words.append(word[:-1])
+                    words.append(word[-1])
+                else:
+                    words.append(word)
+            return words
+        else:
+            logger.error(f"Error in word_tokenize: {str(e)}")
+            # Very basic fallback
+            return text.split()
+
+def sent_tokenize(text):
+    """Wrapper for NLTK's sent_tokenize that handles potential punkt_tab errors"""
+    try:
+        return nltk_sent_tokenize(text)
+    except Exception as e:
+        if 'punkt_tab' in str(e):
+            logger.warning("punkt_tab error encountered, using fallback sentence tokenizer")
+            # Simple fallback: Split on sentence-ending punctuation
+            sentences = []
+            current = ""
+            for char in text:
+                current += char
+                if char in ['.', '!', '?'] and current.strip():
+                    sentences.append(current.strip())
+                    current = ""
+            if current.strip():
+                sentences.append(current.strip())
+            return sentences if sentences else [text]
+        else:
+            logger.error(f"Error in sent_tokenize: {str(e)}")
+            # Very basic fallback - one sentence
+            return [text]
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tag import pos_tag
