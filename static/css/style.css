@@ -613,12 +613,20 @@ body {
     max-height: calc(100vh - 350px);
 }
 
+.token {
+    color: var(--bs-body-color);
+}
+
 .message-sender {
-    color: #1a1a1a;
+    color: var(--bs-body-color);
 }
 
 .message-body {
-    color: #1a1a1a;
+    color: var(--bs-body-color);
+}
+
+.stat-value {
+    color: var(--bs-body-color);
 }
 
 [data-bs-theme="dark"] .message-sender,
