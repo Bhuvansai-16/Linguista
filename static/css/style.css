@@ -525,6 +525,28 @@ body {
     padding: 1.5rem;
     scrollbar-width: thin;
     scrollbar-color: var(--bs-primary) transparent;
+    color: #1a1a1a;
+    max-height: calc(100vh - 350px);
+}
+
+.message-sender {
+    color: #1a1a1a;
+}
+
+.message-body {
+    color: #1a1a1a;
+}
+
+[data-bs-theme="dark"] .message-sender,
+[data-bs-theme="dark"] .message-body,
+[data-bs-theme="dark"] .chat-messages {
+    color: #ffffff;
+}
+
+.chat-options-panel {
+    overflow-y: auto;
+    max-height: calc(100vh - 350px);
+    padding-right: 10px;
 }
 
 .chat-messages::-webkit-scrollbar {
