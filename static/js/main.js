@@ -4,38 +4,46 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // DOM Elements
-    const taskSelect = document.getElementById('task-select');
-    const textInput = document.getElementById('text-input');
-    const comparisonContainer = document.getElementById('comparison-container');
-    const comparisonText = document.getElementById('comparison-text');
-    const processButton = document.getElementById('process-button');
-    const showExplanationBtn = document.getElementById('show-explanation');
-    const explanationBtnText = document.getElementById('explanation-btn-text');
-    const explanationContainer = document.getElementById('explanation-container');
-    const resultContainer = document.getElementById('result-container');
-    const visualizationContainer = document.getElementById('visualization-container') || document.createElement('div');
-    const chartCanvas = document.getElementById('chart-canvas') || document.createElement('canvas');
-    chartCanvas.id = 'chart-canvas';
-    visualizationContainer.appendChild(chartCanvas);
-    const loadingSpinner = document.getElementById('loading-spinner');
-    const errorContainer = document.getElementById('error-container');
-    const sampleTextBtn = document.getElementById('sample-text-btn');
+    const elements = {
+        taskSelect: document.getElementById('task-select'),
+        textInput: document.getElementById('text-input'),
+        comparisonContainer: document.getElementById('comparison-container'),
+        comparisonText: document.getElementById('comparison-text'),
+        processButton: document.getElementById('process-button'),
+        showExplanationBtn: document.getElementById('show-explanation'),
+        explanationBtnText: document.getElementById('explanation-btn-text'),
+        explanationContainer: document.getElementById('explanation-container'),
+        resultContainer: document.getElementById('result-container'),
+        loadingSpinner: document.getElementById('loading-spinner'),
+        errorContainer: document.getElementById('error-container'),
+        sampleTextBtn: document.getElementById('sample-text-btn')
+    };
+
+    // Initialize visualization elements
+    const visualizationContainer = document.getElementById('visualization-container');
+    if (visualizationContainer) {
+        let chartCanvas = document.getElementById('chart-canvas');
+        if (!chartCanvas) {
+            chartCanvas = document.createElement('canvas');
+            chartCanvas.id = 'chart-canvas';
+            visualizationContainer.appendChild(chartCanvas);
+        }
+    }
 
     // Chart instance
     let chart;
 
     // Event Listeners
-
+    
     // Show/hide comparison text input based on task selection
-    taskSelect.addEventListener('change', function() {
-        const task = this.value;
+    if (elements.taskSelect) {
+        elements.taskSelect.addEventListener('change', function() {
+            const task = this.value;
 
-        // Show comparison text input only for text similarity task
-        if (task === 'text_similarity') {
-            comparisonContainer.style.display = 'block';
-        } else {
-            comparisonContainer.style.display = 'none';
-        }
+            // Show comparison text input only for text similarity task
+            if (elements.comparisonContainer) {
+                elements.comparisonContainer.style.display = task === 'text_similarity' ? 'block' : 'none';
+            }
 
         // Hide result and visualization when task changes
         resultContainer.style.display = 'none';
