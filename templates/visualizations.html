@@ -75,7 +75,7 @@
 
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <div id="perf-chart" style="height: 400px;"></div>
+                                               <canvas id="perf-chart" style="width: 100%; height: 400px;"></canvas>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="card">
@@ -327,8 +327,8 @@
                                     </div>
                                     <p class="mt-2">Generating visualization...</p>
                                 </div>
-                                <div id="visualization-container" class="mt-4">
-                                    <canvas id="chart-canvas"></canvas>
+                                    <div id="chart-canvas" class="mt-4" style="position: relative; height: 400px; width: 100%;">
+                                        <canvas id="chart-canvas" style="width: 100%; height: 100%;"></canvas>
                                 </div>
 
                                 <div id="custom-viz-container" class="row" style="display: none;">
@@ -540,8 +540,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Create or update the chart
-        const ctx = document.getElementById('perf-chart');
-        if (ctx) {
+            const canvas = document.getElementById('perf-chart');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
             if (perfChart) {
                 perfChart.destroy();
             }
