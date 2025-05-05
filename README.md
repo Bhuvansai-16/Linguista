@@ -1,4 +1,4 @@
-#Linguista - Your Ultimate NLP bot
+Linguista - Your Ultimate NLP bot
 
 📖 Overview
 
